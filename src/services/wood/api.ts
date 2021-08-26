@@ -18,8 +18,36 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
 }
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
-  return request<API.CurrentUser>('/api/currentUser', {
+  return request<API.UserItem>('/api/currentUser', {
     method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/** 新增登录用户 */
+export async function addAcount(body: API.UserItem, options?: { [key: string]: any }) {
+  return request<Boolean | API.UserItem>('/api/account/add', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+/** 删除用户  */
+export async function deleteUser(params: { id: string }, options?: { [key: string]: any }) {
+  return request<API.UserItem>('/api/account/delete', {
+    method: 'GET',
+    params: params,
+    ...(options || {}),
+  });
+}
+/** 查询用户  */
+export async function findUser(params: API.UserItem, options?: { [key: string]: any }) {
+  return request<Partial<RequestData<API.UserItem>>>('/api/account/find', {
+    method: 'GET',
+    params: params,
     ...(options || {}),
   });
 }
@@ -65,16 +93,57 @@ export async function findProductData(params: API.QueryProduct, options?: { [key
   });
 }
 /** 转货Excel表格数据 */
-export async function transformProductData(body: { file: any }, options?: { [key: string]: any }) {
+export async function transformProductData(
+  body: { file: any },
+  depSelect: string,
+  options?: { [key: string]: any },
+) {
   var formData = new FormData();
   formData.append('fileGuanjia', body.file);
-  return request<{
-    fileName?:string,
-    productToday?:API.ProductListItem[]
-  }|false>('/api/product/transformExcel', {
+  return request<
+    | {
+        fileName?: string;
+        productToday?: API.ProductListItem[];
+      }
+    | false
+  >('/api/product/transformExcel', {
+    method: 'POST',
+    data: formData,
+    params: {
+      dep: depSelect,
+    },
+    requestType: 'form',
+    ...(options || {}),
+  });
+}
+
+/** ------------------->>>>>>>>>>>>>> 部门  */
+export async function importDepartmentData(body: { file: any }, options?: { [key: string]: any }) {
+  var formData = new FormData();
+  formData.append('file', body.file);
+  return request<Boolean>('/api/department/import', {
     method: 'POST',
     data: formData,
     requestType: 'form',
     ...(options || {}),
   });
 }
+export async function findDepartmentData(
+  params: API.DepartmentItem,
+  options?: { [key: string]: any },
+) {
+  return request<Partial<RequestData<API.DepartmentItem>>>('/api/department/find', {
+    method: 'GET',
+    params: params,
+    ...(options || {}),
+  });
+}
+export async function deleteDepartmentData(params: { id?: string }) {
+  return request<Boolean>('/api/department/delete', {
+    method: 'GET',
+    params: params,
+  });
+}
+// /api/department/import
+
+/** ------------------->>>>>>>>>>>>>> 部门  */

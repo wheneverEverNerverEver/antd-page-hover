@@ -3,6 +3,7 @@ import { Alert, message } from 'antd';
 import React, { useState } from 'react';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { useIntl, history, FormattedMessage, SelectLang, useModel } from 'umi';
+var CryptoJS = require('crypto-js');
 
 import { login } from '@/services/wood/api';
 
@@ -27,7 +28,6 @@ const Login: React.FC = () => {
 
   const { initialState, setInitialState } = useModel('@@initialState');
 
-  
   const intl = useIntl();
 
   const fetchUserInfo = async (userInfo: Record<string, any>) => {
@@ -43,7 +43,8 @@ const Login: React.FC = () => {
     setSubmitting(true);
     try {
       // 登录
-      const msg = await login({ ...values });
+      const encodePassword = CryptoJS.AES.encrypt(values?.password, 'caikeluofusiji').toString();
+      const msg = await login({ ...values, password: encodePassword });
       if (msg) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',

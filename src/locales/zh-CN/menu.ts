@@ -1,5 +1,7 @@
 export default {
   'menu.welcome': '导入前转换',
+  'menu.projectItems': '部门列表',
+  'menu.loginAccount': '登录账户',
   'menu.more-blocks': '更多区块',
   'menu.home': '首页',
   'menu.admin': '商品列表',

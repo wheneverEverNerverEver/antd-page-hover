@@ -272,6 +272,11 @@ const getRequestMethod = () => {
     if (/\/api\/logout\/account/.test(url)) {
       localStorage.removeItem('USER_TOKEN');
     }
+    if (response.status + '' === '211') {
+      message.error('请登录后进行操作');
+      history.push('/user/login');
+      throw error;
+    }
     return response;
   });
   return requestMethodInstance;

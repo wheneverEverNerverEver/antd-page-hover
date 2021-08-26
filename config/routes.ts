@@ -31,6 +31,18 @@
     component: './TableList',
   },
   {
+    path: '/projectItems',
+    name: 'projectItems',
+    icon: 'picCenter',
+    component: './projectItems',
+  },
+  {
+    path: '/loginAccount',
+    name: 'loginAccount',
+    icon: 'car',
+    component: './loginAccount',
+  },
+  {
     path: '/',
     redirect: '/transform',
   },

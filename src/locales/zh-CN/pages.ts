@@ -65,8 +65,3 @@ export default {
   'pages.searchTable.batchDeletion': '批量删除',
   'pages.searchTable.batchApproval': '批量审批',
 };
-
-// 'pages.searchTable.updateForm.code': '共同编码',
-// 'pages.searchTable.updateForm.nameSx': '食享名称',
-// 'pages.searchTable.updateForm.nameGj': '管家婆名称',
-// 'pages.searchTable.updateForm.specifications': '规格',

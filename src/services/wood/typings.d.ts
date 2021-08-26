@@ -2,12 +2,19 @@
 /* eslint-disable */
 
 declare namespace API {
-  type CurrentUser = {
+  type UserItem = {
     userName?: string;
     accountName?: string;
-    userid?: string;
-    role?: string[];
+    password?:string
+    passwordCheck?:string
+    _id?:string
   };
+
+  type DepartmentItem={
+    deName?:string
+    code?:string
+    _id?:string
+  }
 
   type LoginResult = {
     status?: string;

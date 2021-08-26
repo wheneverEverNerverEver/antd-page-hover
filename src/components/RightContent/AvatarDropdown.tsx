@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Menu, Spin } from 'antd';
+import { LogoutOutlined } from '@ant-design/icons';
+import { Avatar, Menu, Space, Spin } from 'antd';
 import { history, useModel } from 'umi';
 import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
@@ -68,20 +68,6 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-      {menu && (
-        <Menu.Item key="center">
-          <UserOutlined />
-          个人中心
-        </Menu.Item>
-      )}
-      {menu && (
-        <Menu.Item key="settings">
-          <SettingOutlined />
-          个人设置
-        </Menu.Item>
-      )}
-      {menu && <Menu.Divider />}
-
       <Menu.Item key="logout">
         <LogoutOutlined />
         退出登录
@@ -91,7 +77,12 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   return (
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
-        <span className={`${styles.name} anticon`}>{currentUser.userName}</span>
+        <span className={`${styles.name} anticon`}>
+          <Space>
+            <Avatar>{currentUser.accountName}</Avatar>
+            {currentUser.userName}
+          </Space>
+        </span>
       </span>
     </HeaderDropdown>
   );

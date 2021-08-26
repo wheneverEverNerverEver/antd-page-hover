@@ -9,11 +9,6 @@ import OperateProduct from './components/UpdateForm';
 import ImportData from './components/ImportData';
 import { findProductData, deleteProductData } from '@/services/wood/api';
 
-function Row(props: PropsWithChildren<{}>) {
-  const { children } = props;
-  return <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>{children}</div>;
-}
-
 /**
  * @en-US Add node
  * @zh-CN 添加节点

@@ -2,18 +2,19 @@ import React, { useRef } from 'react';
 import { Button, message } from 'antd';
 import { ModalForm, ProFormInstance, ProFormUploadDragger } from '@ant-design/pro-form';
 import { UploadOutlined } from '@ant-design/icons';
-import { importProductData } from '@/services/wood/api';
+import { importDepartmentData } from '@/services/wood/api';
 
 type FileForm = {
   file: any[];
 };
 
-const ImportData: React.FC<{}> = (props) => {
+const ImportData: React.FC<{ refetch?: () => void }> = (props) => {
+  const { refetch } = props;
   const formRef = useRef<ProFormInstance<FileForm>>();
   return (
     <ModalForm<FileForm>
       formRef={formRef}
-      title="导入商品"
+      title="导入项目"
       trigger={
         <Button type="primary">
           <UploadOutlined /> 导入
@@ -30,7 +31,8 @@ const ImportData: React.FC<{}> = (props) => {
           message.error('请选择文件');
           return false;
         }
-        const up = await importProductData({ file: file });
+        const up = await importDepartmentData({ file: file });
+        refetch?.();
         message.success(up ? '提交成功' : '提交失败');
         return true;
       }}
