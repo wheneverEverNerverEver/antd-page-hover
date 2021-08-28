@@ -1,9 +1,11 @@
 import React, { useRef } from 'react';
 import { Button, message } from 'antd';
-import { ProFormText, ModalForm, ProFormInstance } from '@ant-design/pro-form';
+import type { ProFormInstance } from '@ant-design/pro-form';
+import { ProFormText, ModalForm } from '@ant-design/pro-form';
 import { PlusOutlined } from '@ant-design/icons';
 import { addAcount } from '@/services/wood/api';
-var CryptoJS = require('crypto-js');
+
+const CryptoJS = require('crypto-js');
 
 export type FormValueType = Partial<API.UserItem>;
 
@@ -39,7 +41,7 @@ const AddAccount: React.FC<UpdateFormProps> = (props) => {
         }
 
         const encodePassword = CryptoJS.AES.encrypt(password, 'caikeluofusiji').toString();
-        let back: API.ProductListItem | Boolean = await addAcount({
+        const back: API.ProductListItem | API.ErrorDe = await addAcount({
           password: encodePassword,
           ...rest,
         });
@@ -48,11 +50,10 @@ const AddAccount: React.FC<UpdateFormProps> = (props) => {
           message.success(`新增成功`);
           refetch?.();
           return true;
-        } else {
-          message.error(`新增失败`);
-          refetch?.();
-          return false;
         }
+        message.error(`新增失败`);
+        refetch?.();
+        return false;
       }}
     >
       <ProFormText

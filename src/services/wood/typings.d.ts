@@ -5,16 +5,25 @@ declare namespace API {
   type UserItem = {
     userName?: string;
     accountName?: string;
-    password?:string
-    passwordCheck?:string
-    _id?:string
+    password?: string;
+    passwordCheck?: string;
+    _id?: string;
   };
 
-  type DepartmentItem={
-    deName?:string
-    code?:string
-    _id?:string
-  }
+  type ErrorDe = {
+    error: Boolean;
+  };
+
+  type TransformBack = {
+    fileName?: string;
+    productToday?: API.ProductListItem[];
+  };
+
+  type DepartmentItem = {
+    deName?: string;
+    code?: string;
+    _id?: string;
+  };
 
   type LoginResult = {
     status?: string;

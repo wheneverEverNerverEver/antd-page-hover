@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { Button, message } from 'antd';
-import { ModalForm, ProFormInstance, ProFormUploadDragger } from '@ant-design/pro-form';
+import type { ProFormInstance } from '@ant-design/pro-form';
+import { ModalForm, ProFormUploadDragger } from '@ant-design/pro-form';
 import { UploadOutlined } from '@ant-design/icons';
 import { importDepartmentData } from '@/services/wood/api';
 
@@ -31,7 +32,7 @@ const ImportData: React.FC<{ refetch?: () => void }> = (props) => {
           message.error('请选择文件');
           return false;
         }
-        const up = await importDepartmentData({ file: file });
+        const up = await importDepartmentData({ file });
         refetch?.();
         message.success(up ? '提交成功' : '提交失败');
         return true;

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-underscore-dangle */
 import React, { useCallback, useEffect, useState } from 'react';
 import { Table, Space, Button, message, Popconfirm } from 'antd';
 import AddAccount from './AddAccount';
@@ -6,7 +8,7 @@ import { deleteUser, findUser } from '@/services/wood/api';
 
 const LoginAccount: React.FC = () => {
   const [count, setCount] = useState(0);
-  const [tableDate, setTableDate] = useState<Array<API.UserItem>>();
+  const [tableDate, setTableDate] = useState<API.UserItem[]>();
 
   const getTableData = useCallback(async () => {
     const dataAll = await findUser({});
@@ -36,10 +38,10 @@ const LoginAccount: React.FC = () => {
               render: (_, record) => (
                 <Popconfirm
                   title="你确定要删除该商品吗？"
-                  onConfirm={async (id) => {
+                  onConfirm={async () => {
                     if (record._id) {
                       const result = await deleteUser({ id: record._id });
-                      if (result) {
+                      if (!(result as API.ErrorDe)?.error) {
                         // 重新加载表格
                         setCount((v) => v + 1);
                         message.success('删除成功');

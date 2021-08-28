@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable array-callback-return */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-self-assign */
 // import { extend, RequestInterceptor } from 'umi-request';
 // @ts-nocheck
 /**
  * Base on https://github.com/umijs/E:/SPACE/myapp/node_modules/umi-request
  */
-import {
-  extend,
+import type {
   Context,
   RequestOptionsInit,
   OnionMiddleware,
@@ -15,6 +18,7 @@ import {
   RequestInterceptor,
   ResponseInterceptor,
 } from 'umi-request';
+import { extend } from 'umi-request';
 // @ts-ignore
 
 import { ApplyPluginsType, history, plugin } from 'umi';
@@ -23,7 +27,7 @@ import { ApplyPluginsType, history, plugin } from 'umi';
 // @ts-ignore
 import { message, notification } from '@umijs/plugin-request/lib/ui';
 import useUmiRequest, { UseRequestProvider } from '@ahooksjs/use-request';
-import {
+import type {
   BaseOptions,
   BasePaginatedOptions,
   BaseResult,
@@ -38,7 +42,7 @@ import {
   PaginatedOptionsWithFormat,
   PaginatedParams,
   PaginatedResult,
-} from 'E:/SPACE/myapp/node_modules/@ahooksjs/use-request/lib/types';
+} from '@ahooksjs/use-request/lib/types';
 
 type ResultWithData<T = any> = { data?: T; [key: string]: any };
 
@@ -213,7 +217,7 @@ const getRequestMethod = () => {
     const { getResponse } = options;
     const resData = getResponse ? res.data : res;
     const errorInfo = errorAdaptor(resData, ctx);
-    if (errorInfo.success === false) {
+    if (errorInfo?.success === false) {
       // 抛出错误到 errorHandler 中处理
       const error: RequestError = new Error(errorInfo.errorMessage);
       error.name = 'BizError';
@@ -222,27 +226,24 @@ const getRequestMethod = () => {
       throw error;
     }
   });
-  requestMethodInstance.use(async (ctx, next) => {
+  requestMethodInstance.use((ctx, next) => {
     const tokenJO = localStorage.getItem('USER_TOKEN');
-
     if (ctx?.req?.url === '/api/login/account') {
-      await next();
+      next();
+    } else if (tokenJO) {
+      const headers: any = {
+        'x-csrf-token': `${localStorage.getItem('USER_TOKEN')}`,
+      };
+      const oldHeader = ctx.req.options.headers;
+      ctx.req.options.headers = {
+        ...oldHeader,
+        ...headers,
+      };
+      next();
     } else {
-      if (tokenJO) {
-        const headers: any = {
-          'x-csrf-token': `${localStorage.getItem('USER_TOKEN')}`,
-        };
-        const oldHeader = ctx.req.options.headers;
-        ctx.req.options.headers = {
-          ...oldHeader,
-          ...headers,
-        };
-        await next();
-      } else {
-        message.error('请登录后进行操作');
-        history.push('/user/login');
-        throw error;
-      }
+      message.error('请登录后进行操作');
+      history.push('/user/login');
+      throw error;
     }
   });
 
@@ -272,7 +273,7 @@ const getRequestMethod = () => {
     if (/\/api\/logout\/account/.test(url)) {
       localStorage.removeItem('USER_TOKEN');
     }
-    if (response.status + '' === '211') {
+    if (`${response.status}` === '211') {
       message.error('请登录后进行操作');
       history.push('/user/login');
       throw error;

@@ -49,7 +49,7 @@ export async function getInitialState(): Promise<{
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: any = ({ initialState }:Record<string,any>) => {
+export const layout: any = ({ initialState }: Record<string, any>) => {
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,

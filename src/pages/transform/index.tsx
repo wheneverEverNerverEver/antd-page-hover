@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Card, message, Table, Typography } from 'antd';
+import { Button, Card, message, Table } from 'antd';
 import ProForm, { ProFormSelect, ProFormUploadDragger } from '@ant-design/pro-form';
 import { transformProductData, findDepartmentData } from '../../services/wood/api';
 import proxy from './../../../config/proxy';
@@ -10,7 +10,7 @@ export default (): React.ReactNode => {
     { fileName?: string; tableData?: API.ProductListItem[] } | undefined
   >();
 
-  const [depart, setDepart] = useState<Array<Record<'value' | 'label', string>>>([]);
+  const [depart, setDepart] = useState<Record<'value' | 'label', string>[]>([]);
 
   useEffect(() => {
     findDepartmentData({}).then((res) => {
@@ -64,16 +64,15 @@ export default (): React.ReactNode => {
                 const result = await transformProductData({ file: fileOr }, department);
                 if (result) {
                   recordSubmitResult({
-                    fileName: result.fileName,
-                    tableData: result.productToday,
+                    fileName: (result as API.TransformBack)?.fileName,
+                    tableData: (result as API.TransformBack)?.productToday,
                   });
                   message.success('上传成功');
                   return true;
-                } else {
-                  recordSubmitResult(undefined);
-                  message.error('上传失败');
-                  return false;
                 }
+                recordSubmitResult(undefined);
+                message.error('上传失败');
+                return false;
               }}
             >
               <ProFormSelect
@@ -88,6 +87,9 @@ export default (): React.ReactNode => {
                 accept=".xls,.xlsx"
                 style={{
                   width: '70%',
+                }}
+                onChange={() => {
+                  recordSubmitResult((v) => ({ ...(v || {}), fileName: undefined }));
                 }}
               />
             </ProForm>

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-underscore-dangle */
 import React, { useCallback, useState, useEffect } from 'react';
 import { Button, message, Popconfirm, Space, Table } from 'antd';
 import ImportData from './ImportData';
@@ -6,7 +8,7 @@ import { deleteDepartmentData, findDepartmentData } from '@/services/wood/api';
 
 const ProjectItems: React.FC = () => {
   const [count, setCount] = useState(0);
-  const [tableDate, setTableDate] = useState<Array<API.DepartmentItem>>();
+  const [tableDate, setTableDate] = useState<API.DepartmentItem[]>();
 
   const getTableData = useCallback(async () => {
     const dataAll = await findDepartmentData({});
@@ -37,10 +39,10 @@ const ProjectItems: React.FC = () => {
               render: (_, record) => (
                 <Popconfirm
                   title="你确定要删除该项目吗？"
-                  onConfirm={async (id) => {
-                    if (id) {
+                  onConfirm={async () => {
+                    if (record?._id) {
                       const result = await deleteDepartmentData({ id: record._id });
-                      if (result) {
+                      if (!(result as API.ErrorDe)?.error) {
                         // 重新加载表格
                         setCount((v) => v + 1);
                         message.success('删除成功');

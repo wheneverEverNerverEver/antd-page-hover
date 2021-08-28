@@ -1,5 +1,6 @@
-import { Drawer, message, Popconfirm, Button, List, Card } from 'antd';
-import React, { useState, useRef, PropsWithChildren } from 'react';
+/* eslint-disable no-underscore-dangle */
+import { Drawer, message, Popconfirm, Button, Card } from 'antd';
+import React, { useState, useRef } from 'react';
 import { useIntl } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -89,7 +90,7 @@ const TableList: React.FC = () => {
           onConfirm={async () => {
             if (record._id) {
               const result = await deleteProductData({ id: record._id });
-              if (result) {
+              if (!(result as API.ErrorDe)?.error) {
                 actionRef?.current?.reload();
                 message.success('删除成功');
               } else {
@@ -121,7 +122,7 @@ const TableList: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        request={async (params, sorter, filter) => {
+        request={async (params) => {
           // 表单搜索项会从 params 传入，传递给后端接口。
           const { current, pageSize, ...rest } = params;
           return findProductData({
@@ -133,7 +134,11 @@ const TableList: React.FC = () => {
         options={false}
         toolBarRender={() => [
           <OperateProduct type="ADD" refetchTableRef={actionRef} />,
-          <ImportData />,
+          <ImportData
+            refetch={() => {
+              actionRef?.current?.reload?.();
+            }}
+          />,
         ]}
         columns={columns}
         pagination={{

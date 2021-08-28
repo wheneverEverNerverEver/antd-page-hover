@@ -2,12 +2,13 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, message } from 'antd';
 import React, { useState } from 'react';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
-import { useIntl, history, FormattedMessage, SelectLang, useModel } from 'umi';
-var CryptoJS = require('crypto-js');
+import { useIntl, history, FormattedMessage, SelectLang, useModel, Link } from 'umi';
 
 import { login } from '@/services/wood/api';
 
 import styles from './index.less';
+
+const CryptoJS = require('crypto-js');
 
 const LoginMessage: React.FC<{
   content: string;
@@ -26,7 +27,7 @@ const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
 
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const { setInitialState } = useModel('@@initialState');
 
   const intl = useIntl();
 
@@ -45,7 +46,7 @@ const Login: React.FC = () => {
       // 登录
       const encodePassword = CryptoJS.AES.encrypt(values?.password, 'caikeluofusiji').toString();
       const msg = await login({ ...values, password: encodePassword });
-      if (msg) {
+      if (!(msg as API.ErrorDe)?.error) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
@@ -80,6 +81,16 @@ const Login: React.FC = () => {
       </div>
       <div className={styles.content}>
         <div className={styles.main}>
+          <div className={styles.top}>
+            <div className={styles.header}>
+              <Link to="/">
+                <span className={styles.title}>Nan Space</span>
+              </Link>
+            </div>
+            <div className={styles.desc}>
+              {intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
+            </div>
+          </div>
           <ProForm
             initialValues={{
               autoLogin: true,
@@ -108,7 +119,7 @@ const Login: React.FC = () => {
               <LoginMessage
                 content={intl.formatMessage({
                   id: 'pages.login.accountLogin.errorMessage',
-                  defaultMessage: '账户或密码错误(admin/ant.design)',
+                  defaultMessage: '账户或密码错误',
                 })}
               />
             )}
@@ -121,7 +132,7 @@ const Login: React.FC = () => {
                 }}
                 placeholder={intl.formatMessage({
                   id: 'pages.login.username.placeholder',
-                  defaultMessage: '用户名: admin or user',
+                  defaultMessage: '账号名称',
                 })}
                 rules={[
                   {
@@ -129,7 +140,7 @@ const Login: React.FC = () => {
                     message: (
                       <FormattedMessage
                         id="pages.login.username.required"
-                        defaultMessage="请输入用户名!"
+                        defaultMessage="请输入账号名称!"
                       />
                     ),
                   },
@@ -143,7 +154,7 @@ const Login: React.FC = () => {
                 }}
                 placeholder={intl.formatMessage({
                   id: 'pages.login.password.placeholder',
-                  defaultMessage: '密码: ant.design',
+                  defaultMessage: '请输入密码',
                 })}
                 rules={[
                   {

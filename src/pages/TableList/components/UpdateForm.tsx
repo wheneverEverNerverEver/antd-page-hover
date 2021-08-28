@@ -1,14 +1,11 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useRef } from 'react';
 import { Button, message } from 'antd';
-import ProForm, {
-  ProFormText,
-  ModalForm,
-  ProFormList,
-  ProFormInstance,
-} from '@ant-design/pro-form';
+import type { ProFormInstance } from '@ant-design/pro-form';
+import ProForm, { ProFormText, ModalForm, ProFormList } from '@ant-design/pro-form';
 import { PlusOutlined, EditOutlined } from '@ant-design/icons';
 import { updateProductData, addProductData } from '@/services/wood/api';
-import { ActionType } from '@ant-design/pro-table';
+import type { ActionType } from '@ant-design/pro-table';
 
 export type FormValueType = Partial<API.ProductListItem>;
 
@@ -46,22 +43,32 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
         }
       }}
       onFinish={async (valuesGot) => {
-        let back: API.ProductListItem | Boolean = false;
-        if (type === 'ADD') {
-          back = await addProductData({ ...valuesGot });
+        let back: API.ProductListItem | API.ErrorDe;
+
+        try {
+          if (type === 'ADD') {
+            back = await addProductData({ ...valuesGot });
+            if (!(back as API.ErrorDe)?.error) {
+              message.success(`${typeDict[type]}成功`);
+              refetchTableRef?.current?.reload();
+              return true;
+            }
+          }
+          if (type === 'UPDATE' && values?._id) {
+            back = await updateProductData({ ...valuesGot, _id: values._id });
+            if (!(back as API.ErrorDe)?.error) {
+              message.success(`${typeDict[type]}成功`);
+              refetchTableRef?.current?.reload();
+              return true;
+            }
+          }
+        } catch (e) {
+          back = { error: true };
         }
-        if (type === 'UPDATE' && values?._id) {
-          back = await updateProductData({ ...valuesGot, _id: values._id });
-        }
-        if (back) {
-          message.success(`${typeDict[type]}成功`);
-          refetchTableRef?.current?.reload();
-          return true;
-        } else {
-          message.error(`${typeDict[type]}失败`);
-          refetchTableRef?.current?.reload();
-          return false;
-        }
+
+        message.error(`${typeDict[type]}失败`);
+        refetchTableRef?.current?.reload();
+        return false;
       }}
     >
       <ProFormText
