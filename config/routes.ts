@@ -28,14 +28,14 @@
     name: 'customer',
     path: '/customer',
     icon: 'form',
-    component: './accounting/customer',
+    component: './customer',
   },
   /** 暂时隐藏，功能待加
   {
     name: 'accounting',
     path: '/accounting',
     icon: 'warning',
-    component: './accounting/list',
+    component: './accounting',
   },
    */
   {
