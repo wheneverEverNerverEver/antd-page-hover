@@ -1,38 +1,75 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-underscore-dangle */
-import React, { useCallback, useState, useEffect } from 'react';
-import { Button, message, Popconfirm, Space, Table } from 'antd';
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
+import { Button, Card, Col, message, Popconfirm, Radio, Row, Space, Table, Tag } from 'antd';
 import ImportData from './ImportData';
 import { PageContent } from '@/components/PageContent';
 import { deleteDepartmentData, findDepartmentData } from '@/services/wood/api';
+import { tagLabel } from '@/services/wood/dict';
 
 const ProjectItems: React.FC = () => {
   const [count, setCount] = useState(0);
+  const [valueRa, setValueRa] = useState<API.LabelType>('DEPARTENT');
   const [tableDate, setTableDate] = useState<API.DepartmentItem[]>();
 
   const getTableData = useCallback(async () => {
-    const dataAll = await findDepartmentData({});
+    const dataAll = await findDepartmentData({}, valueRa);
     setTableDate(dataAll?.data || []);
-  }, [count, setTableDate]);
+  }, [count, setTableDate, valueRa]);
 
   useEffect(() => {
     getTableData();
   }, [getTableData]);
 
+  const radioOption = useMemo(() => ([{
+    label: '类别', value: 'CLASS'
+  }, {
+    label: '地区', value: 'DISTRICT'
+  }, {
+    label: '部门', value: 'DEPARTENT'
+  },]), [])
+
   return (
     <PageContent>
       <Space direction="vertical" style={{ width: '100%' }}>
-        <ImportData
-          refetch={() => {
-            setCount((v) => v + 1);
-          }}
-        />
+        <Card >
+          <Row>
+            <Col span={8}>
+              <Radio.Group
+                options={radioOption}
+                onChange={(e) => {
+                  setValueRa(e.target.value)
+                }}
+                value={valueRa}
+                optionType="button"
+                buttonStyle="solid"
+              />
+            </Col>
+            <Col span={4} offset={12}>
+              <ImportData
+                refetch={() => {
+                  setCount((v) => v + 1);
+                }}
+              />
+            </Col>
+          </Row>
+
+
+        </Card>
+
         <Table
           dataSource={tableDate || []}
           rowKey="_id"
+
           columns={[
-            { dataIndex: 'code', title: '部门编码' },
-            { dataIndex: 'deName', title: '部门（统计字段）' },
+            { dataIndex: 'code', title: '编码' },
+            { dataIndex: 'deName', title: '名称' },
+            {
+              dataIndex: 'label', title: '类别', render: (val) => {
+                const colorAndLable = tagLabel[val]
+                return (<Tag color={colorAndLable?.color}>{colorAndLable?.label}</Tag>)
+              }
+            },
             {
               dataIndex: '_id',
               title: '操作',
@@ -51,7 +88,7 @@ const ProjectItems: React.FC = () => {
                       }
                     }
                   }}
-                  onCancel={() => {}}
+                  onCancel={() => { }}
                   okText="确定"
                   cancelText="否"
                 >

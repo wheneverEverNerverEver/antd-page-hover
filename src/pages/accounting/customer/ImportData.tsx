@@ -4,20 +4,22 @@ import type { ProFormInstance } from '@ant-design/pro-form';
 import { ProFormRadio } from '@ant-design/pro-form';
 import { ModalForm, ProFormUploadDragger } from '@ant-design/pro-form';
 import { UploadOutlined } from '@ant-design/icons';
-import { importDepartmentData } from '@/services/wood/api';
+import { importCustomerData } from '@/services/wood/api';
 
 type FileForm = {
   file: any[];
   labelType: API.LabelType
 };
 
-const ImportData: React.FC<{ refetch?: () => void }> = (props) => {
-  const { refetch } = props;
+const ImportData: React.FC<{
+  refetch?: () => void, classoption: Record<"label" | "value", string>[]
+}> = (props) => {
+  const { refetch, classoption } = props;
   const formRef = useRef<ProFormInstance<FileForm>>();
   return (
     <ModalForm<FileForm>
       formRef={formRef}
-      title="导入"
+      title="导入客户"
       trigger={
         <Button type="primary">
           <UploadOutlined /> 导入
@@ -34,7 +36,7 @@ const ImportData: React.FC<{ refetch?: () => void }> = (props) => {
           message.error('请选择文件');
           return false;
         }
-        const up = await importDepartmentData({ file }, values.labelType);
+        const up = await importCustomerData({ file }, values.labelType);
         refetch?.();
         message.success(up ? '提交成功' : '提交失败');
         return true;
@@ -42,21 +44,9 @@ const ImportData: React.FC<{ refetch?: () => void }> = (props) => {
     >
       <ProFormRadio.Group
         name="labelType"
-        label="导入文件是属于："
-        initialValue='DEPARTENT'
-        options={[
-          {
-            label: '配送员=部门',
-            value: 'DEPARTENT',
-          },
-          {
-            label: '经手人=地区',
-            value: 'DISTRICT',
-          }, {
-            label: '类别',
-            value: 'CLASS',
-          },
-        ]}
+        label="导入的客户类别："
+        options={classoption}
+        initialValue={classoption?.[0]?.value}
         rules={[
           {
             required: true,

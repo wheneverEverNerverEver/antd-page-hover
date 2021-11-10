@@ -1,6 +1,9 @@
 export default {
   'menu.welcome': '导入前转换',
-  'menu.projectItems': '部门列表',
+  'menu.manager': '经手人管理',
+  'menu.accounting': '几斗记录',
+  'menu.customer': '客户记录',
+  'menu.projectItems': '分类列表',
   'menu.loginAccount': '登录账户',
   'menu.more-blocks': '更多区块',
   'menu.home': '首页',

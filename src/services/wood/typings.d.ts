@@ -2,6 +2,15 @@
 /* eslint-disable */
 
 declare namespace API {
+
+
+
+  type Manager = {
+    name?: string;
+    sxCode?: string;
+    gjCode: string;
+    _id?: string
+  }
   type UserItem = {
     userName?: string;
     accountName?: string;
@@ -17,6 +26,8 @@ declare namespace API {
   type TransformBack = {
     fileName?: string;
     productToday?: API.ProductListItem[];
+    newConstomes?: Array<{ id: string, name: string, phone: string }>,
+    productNew?: Array<{ code: string, name: string }>
   };
 
   type DepartmentItem = {
@@ -24,6 +35,14 @@ declare namespace API {
     code?: string;
     _id?: string;
   };
+
+  type TransformRule = {
+    withStart?: string
+    depart?: DepartmentItem & {
+      id?: string
+    }
+    _id?: string
+  }
 
   type LoginResult = {
     status?: string;
@@ -65,6 +84,11 @@ declare namespace API {
     limit?: number;
     page?: number;
     code?: string;
+  };
+
+  type QueryManager = {
+    limit?: number;
+    page?: number;
   };
 
   type ProductList = {
@@ -114,4 +138,18 @@ declare namespace API {
     description?: string;
     type?: NoticeIconItemType;
   };
+
+  type LabelType = 'DEPARTENT' | 'DISTRICT' | 'CLASS'
+  type TagLable = Record<LabelType, { color: string, label: string }>
+  type CustomerType = {
+    code?: string,
+    name?: string,
+    deadline?: number | string,
+    updateTime?: number | string,
+    district?: { code?: string, deName?: string }
+    label?: { code?: string, deName?: string }
+    oweTotal?: number,
+    _id?: string
+  }
 }
+

@@ -10,7 +10,7 @@ const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
   hash: true,
-  antd: {},
+  antd: { },
   dva: {
     hmr: true,
   },
@@ -32,7 +32,7 @@ export default defineConfig({
     loading: '@ant-design/pro-layout/es/PageLoading',
   },
   targets: {
-    ie: 11,
+    ie: 10,
   },
   // umi routes: https://umijs.org/docs/routing
   routes,
@@ -42,7 +42,7 @@ export default defineConfig({
   },
   // esbuild is father build tools
   // https://umijs.org/plugins/plugin-esbuild
-  esbuild: {},
+  esbuild: { },
   title: false,
   ignoreMomentLocale: true,
   proxy: proxy[REACT_APP_ENV || 'dev'],
@@ -50,7 +50,7 @@ export default defineConfig({
     basePath: '/',
   },
   // Fast Refresh 热更新
-  fastRefresh: {},
+  fastRefresh: { },
   // openAPI: [
   //   {
   //     requestLibPath: "import { request } from 'umi'",
@@ -66,7 +66,7 @@ export default defineConfig({
   //   },
   // ],
   nodeModulesTransform: { type: 'none' },
-  mfsu: {},
-  webpack5: {},
-  exportStatic: {},
+  mfsu: { },
+  webpack5: { },
+  exportStatic: { },
 });

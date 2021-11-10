@@ -46,7 +46,8 @@ const Login: React.FC = () => {
       // 登录
       const encodePassword = CryptoJS.AES.encrypt(values?.password, 'caikeluofusiji').toString();
       const msg = await login({ ...values, password: encodePassword });
-      if (!(msg as API.ErrorDe)?.error) {
+
+      if (!(msg as API.ErrorDe)?.error && msg) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
@@ -55,9 +56,7 @@ const Login: React.FC = () => {
         await fetchUserInfo(msg);
         /** 此方法会跳转到 redirect 参数所在的位置 */
         if (!history) return;
-        const { query } = history.location;
-        const { redirect } = query as { redirect: string };
-        history.push(redirect || '/');
+        history.push('/');
         return;
       }
       // 如果失败去设置用户错误信息

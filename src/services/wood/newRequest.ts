@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable array-callback-return */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-self-assign */
-// import { extend, RequestInterceptor } from 'umi-request';
 // @ts-nocheck
 /**
- * Base on https://github.com/umijs/E:/SPACE/myapp/node_modules/umi-request
+ * Base on https://github.com/umijs/E:/SPACE_UNKNOW/page-road/node_modules/umi-request
  */
 import type {
   Context,
@@ -16,9 +13,11 @@ import type {
   RequestOptionsWithResponse,
   RequestResponse,
   RequestInterceptor,
-  ResponseInterceptor,
+  ResponseInterceptor
 } from 'umi-request';
-import { extend } from 'umi-request';
+import {
+  extend
+} from 'umi-request';
 // @ts-ignore
 
 import { ApplyPluginsType, history, plugin } from 'umi';
@@ -44,11 +43,16 @@ import type {
   PaginatedResult,
 } from '@ahooksjs/use-request/lib/types';
 
-type ResultWithData<T = any> = { data?: T; [key: string]: any };
+type ResultWithData<T = any> = { data?: T;[key: string]: any };
 
-function useRequest<R = any, P extends any[] = any, U = any, UU extends U = any>(
-  service: CombineService<R, P>,
-  options: OptionsWithFormat<R, P, U, UU>,
+function useRequest<
+  R = any,
+  P extends any[] = any,
+  U = any,
+  UU extends U = any,
+  >(
+    service: CombineService<R, P>,
+    options: OptionsWithFormat<R, P, U, UU>,
 ): BaseResult<U, P>;
 function useRequest<R extends ResultWithData = any, P extends any[] = any>(
   service: CombineService<R, P>,
@@ -58,9 +62,12 @@ function useRequest<R extends LoadMoreFormatReturn = any, RR = any>(
   service: CombineService<RR, LoadMoreParams<R>>,
   options: LoadMoreOptionsWithFormat<R, RR>,
 ): LoadMoreResult<R>;
-function useRequest<R extends ResultWithData<LoadMoreFormatReturn | any> = any, RR extends R = any>(
-  service: CombineService<R, LoadMoreParams<R['data']>>,
-  options: LoadMoreOptions<RR['data']>,
+function useRequest<
+  R extends ResultWithData<LoadMoreFormatReturn | any> = any,
+  RR extends R = any,
+  >(
+    service: CombineService<R, LoadMoreParams<R['data']>>,
+    options: LoadMoreOptions<RR['data']>,
 ): LoadMoreResult<R['data']>;
 
 function useRequest<R = any, Item = any, U extends Item = any>(
@@ -68,12 +75,15 @@ function useRequest<R = any, Item = any, U extends Item = any>(
   options: PaginatedOptionsWithFormat<R, Item, U>,
 ): PaginatedResult<Item>;
 function useRequest<Item = any, U extends Item = any>(
-  service: CombineService<ResultWithData<PaginatedFormatReturn<Item>>, PaginatedParams>,
+  service: CombineService<
+    ResultWithData<PaginatedFormatReturn<Item>>,
+    PaginatedParams
+  >,
   options: BasePaginatedOptions<U>,
 ): PaginatedResult<Item>;
-function useRequest(service: any, options: any = {}) {
+function useRequest(service: any, options: any = { }) {
   return useUmiRequest(service, {
-    formatResult: (result) => result?.data,
+    formatResult: result => result?.data,
     requestMethod: (requestOptions: any) => {
       if (typeof requestOptions === 'string') {
         return request(requestOptions);
@@ -138,13 +148,15 @@ const getRequestMethod = () => {
   const requestConfig: RequestConfig = plugin.applyPlugins({
     key: 'request',
     type: ApplyPluginsType.modify,
-    initialValue: {},
+    initialValue: { },
   });
 
-  const errorAdaptor = requestConfig.errorConfig?.adaptor || ((resData) => resData);
+  const errorAdaptor =
+    requestConfig.errorConfig?.adaptor || ((resData) => resData);
 
   requestMethodInstance = extend({
-    errorHandler: (error: RequestError) => {
+    errorHandler: (errors: RequestError) => {
+      const error = errors || { }
       // @ts-ignore
       if (error?.request?.options?.skipErrorHandler) {
         throw error;
@@ -157,6 +169,7 @@ const getRequestMethod = () => {
         };
         errorInfo = errorAdaptor(error.data, ctx);
         error.message = errorInfo?.errorMessage || error.message;
+        // eslint-disable-next-line no-self-assign
         error.data = error.data;
         error.info = errorInfo;
       }
@@ -165,7 +178,8 @@ const getRequestMethod = () => {
       if (errorInfo) {
         const errorMessage = errorInfo?.errorMessage;
         const errorCode = errorInfo?.errorCode;
-        const errorPage = requestConfig.errorConfig?.errorPage || DEFAULT_ERROR_PAGE;
+        const errorPage =
+          requestConfig.errorConfig?.errorPage || DEFAULT_ERROR_PAGE;
 
         switch (errorInfo?.showType) {
           case ErrorShowType.SILENT:
@@ -217,7 +231,7 @@ const getRequestMethod = () => {
     const { getResponse } = options;
     const resData = getResponse ? res.data : res;
     const errorInfo = errorAdaptor(resData, ctx);
-    if (errorInfo?.success === false) {
+    if (errorInfo?.error === true) {
       // 抛出错误到 errorHandler 中处理
       const error: RequestError = new Error(errorInfo.errorMessage);
       error.name = 'BizError';
@@ -226,10 +240,11 @@ const getRequestMethod = () => {
       throw error;
     }
   });
-  requestMethodInstance.use((ctx, next) => {
+  requestMethodInstance.use(async (ctx, next) => {
     const tokenJO = localStorage.getItem('USER_TOKEN');
+
     if (ctx?.req?.url === '/api/login/account') {
-      next();
+      await next();
     } else if (tokenJO) {
       const headers: any = {
         'x-csrf-token': `${localStorage.getItem('USER_TOKEN')}`,
@@ -239,11 +254,7 @@ const getRequestMethod = () => {
         ...oldHeader,
         ...headers,
       };
-      next();
-    } else {
-      message.error('请登录后进行操作');
-      history.push('/user/login');
-      throw error;
+      await next();
     }
   });
 
@@ -267,19 +278,24 @@ const getRequestMethod = () => {
     const response = args[0];
     const { url, headers } = response;
     const tokenGot = headers?.get('token');
-    if (/\/api\/login\/account/.test(url) && tokenGot) {
+    const isLogin = /\/api\/login\/account/.test(url)
+    const tokenGotF = localStorage.getItem('USER_TOKEN')
+
+    if (isLogin && tokenGot) {
       localStorage.setItem('USER_TOKEN', tokenGot);
     }
+
     if (/\/api\/logout\/account/.test(url)) {
       localStorage.removeItem('USER_TOKEN');
     }
-    if (`${response.status}` === '211') {
+    if (`${response.status}` === '211' || (!isLogin && !tokenGotF)) {
       message.error('请登录后进行操作');
       history.push('/user/login');
-      throw error;
+      throw Error('请登录后进行操作');
     }
-    return response;
+    return args;
   });
+
   return requestMethodInstance;
 };
 

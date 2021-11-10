@@ -25,6 +25,20 @@
     component: './transform',
   },
   {
+    name: 'customer',
+    path: '/customer',
+    icon: 'form',
+    component: './accounting/customer',
+  },
+  /** 暂时隐藏，功能待加
+  {
+    name: 'accounting',
+    path: '/accounting',
+    icon: 'warning',
+    component: './accounting/list',
+  },
+   */
+  {
     name: 'admin',
     icon: 'table',
     path: '/list',
@@ -42,6 +56,12 @@
     icon: 'car',
     component: './loginAccount',
   },
+  // {
+  //   path: '/manager',
+  //   name: 'manager',
+  //   icon: 'contacts',
+  //   component: './Manager',
+  // },
   {
     path: '/',
     redirect: '/transform',

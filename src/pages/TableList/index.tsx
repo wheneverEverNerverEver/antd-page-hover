@@ -9,6 +9,7 @@ import ProDescriptions from '@ant-design/pro-descriptions';
 import OperateProduct from './components/UpdateForm';
 import ImportData from './components/ImportData';
 import { findProductData, deleteProductData } from '@/services/wood/api';
+import DownloadOutlined from '@ant-design/icons/lib/icons/DownloadOutlined';
 
 /**
  * @en-US Add node
@@ -22,6 +23,25 @@ import { findProductData, deleteProductData } from '@/services/wood/api';
  *
  * @param fields
  */
+
+export function downloadFile(data: BlobPart, type: string, name?: string) {
+
+
+  /* 火狐谷歌的文件下载方式 */
+  const blob = new Blob([data], {
+    type
+  })
+  const downloadElement = document.createElement('a')
+  const href = window.URL.createObjectURL(blob)
+  downloadElement.href = href
+  downloadElement.download = `${name}`
+  document.body.appendChild(downloadElement)
+  downloadElement.click()
+  document.body.removeChild(downloadElement)
+
+}
+
+
 
 /**
  *  Delete node
@@ -98,7 +118,7 @@ const TableList: React.FC = () => {
               }
             }
           }}
-          onCancel={() => {}}
+          onCancel={() => { }}
           okText="确定"
           cancelText="否"
         >
@@ -139,6 +159,11 @@ const TableList: React.FC = () => {
               actionRef?.current?.reload?.();
             }}
           />,
+          <a style={{ display: 'inline-block' }} download href="/api/product/download">
+            <Button icon={<DownloadOutlined />}>
+              下载全部商品
+            </Button>
+          </a>
         ]}
         columns={columns}
         pagination={{
@@ -159,7 +184,7 @@ const TableList: React.FC = () => {
             column={1}
             title={currentRow?.code}
             request={async () => ({
-              data: currentRow || {},
+              data: currentRow || { },
             })}
             params={{
               id: currentRow?.code,
@@ -190,7 +215,7 @@ const TableList: React.FC = () => {
                 key: 'unit',
                 dataIndex: 'unit',
                 render: () => (
-                  <Card title="单位对应">
+                  <Card title="单位对应（第一个默认是基本单位）">
                     <table>
                       <thead>
                         <tr style={{ borderBottom: '1px solid #f0f0f0', padding: '5px 0' }}>

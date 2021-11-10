@@ -2,19 +2,19 @@
 import React, { useRef } from 'react';
 import { Button, message } from 'antd';
 import type { ProFormInstance } from '@ant-design/pro-form';
-import ProForm, { ProFormText, ModalForm, ProFormList } from '@ant-design/pro-form';
+import { ProFormText, ModalForm } from '@ant-design/pro-form';
 import { PlusOutlined, EditOutlined } from '@ant-design/icons';
-import { updateProductData, addProductData } from '@/services/wood/api';
+import { updateManageData, addManageData } from '@/services/wood/api';
 import type { ActionType } from '@ant-design/pro-table';
 
-export type FormValueType = Partial<API.ProductListItem>;
+export type FormValueType = Partial<API.Manager>;
 
 type TypeDic = 'ADD' | 'UPDATE';
 
 export type UpdateFormProps = {
   onCancel?: (flag?: boolean, formVals?: FormValueType) => void;
   onSubmit?: (values: FormValueType) => Promise<void>;
-  values?: Partial<API.ProductListItem>;
+  values?: Partial<API.Manager>;
   type: TypeDic;
   refetchTableRef?: React.MutableRefObject<ActionType | undefined>;
 };
@@ -25,14 +25,9 @@ const typeDict: Record<TypeDic, string> = {
 
 const OperateProduct: React.FC<UpdateFormProps> = (props) => {
   const { type, values, refetchTableRef } = props;
-  const formRef = useRef<ProFormInstance<API.ProductListItem>>();
+  const formRef = useRef<ProFormInstance<API.Manager>>();
   return (
-    <ModalForm<API.ProductListItem>
-      modalProps={{
-        destroyOnClose: true,
-        maskClosable: false,
-        keyboard: false
-      }}
+    <ModalForm<API.Manager>
       title={`${typeDict[type]}商品`}
       formRef={formRef}
       trigger={
@@ -48,11 +43,11 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
         }
       }}
       onFinish={async (valuesGot) => {
-        let back: API.ProductListItem | API.ErrorDe;
+        let back: API.Manager | API.ErrorDe;
 
         try {
           if (type === 'ADD') {
-            back = await addProductData({ ...valuesGot });
+            back = await addManageData({ ...valuesGot });
             if (!((back as API.ErrorDe)?.error)) {
               message.success(`${typeDict[type]}成功`);
               refetchTableRef?.current?.reload();
@@ -60,7 +55,7 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
             }
           }
           if (type === 'UPDATE' && values?._id) {
-            back = await updateProductData({ ...valuesGot, _id: values._id });
+            back = await updateManageData({ ...valuesGot, _id: values._id });
             if (!((back as API.ErrorDe)?.error)) {
               message.success(`${typeDict[type]}成功`);
               refetchTableRef?.current?.reload();
@@ -77,18 +72,18 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
       }}
     >
       <ProFormText
-        name="code"
-        label="共同编码"
+        name="sxCode"
+        label="食享员工编号"
         rules={[
           {
             required: true,
-            message: '请输入共同编码！',
+            message: '请输入食享员工编号！',
           },
         ]}
       />
       <ProFormText
-        name="nameSx"
-        label="食享名称"
+        name="name"
+        label="经手人名称"
         rules={[
           {
             required: true,
@@ -96,21 +91,7 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
           },
         ]}
       />
-      <ProFormText name="nameGj" label="管家婆名称" />
-      <ProFormText name="specifications" label="规格" />
-      <ProFormList
-        name="unit"
-        label="单位对应"
-        creatorButtonProps={{
-          position: 'bottom',
-        }}
-        initialValue={type === 'ADD' ? [{ unitSx: '包', unitGj: '包' }, { unitSx: '箱', unitGj: '箱' }, { unitSx: '件', unitGj: '箱' }] : undefined}
-      >
-        <ProForm.Group>
-          <ProFormText name="unitSx" label="食享单位" />
-          <ProFormText name="unitGj" label="姓管家婆单位" />
-        </ProForm.Group>
-      </ProFormList>
+      <ProFormText name="gjCode" label="管家婆对应编码" placeholder="需要转到某人名下的时候可填入对应人的编码" />
     </ModalForm>
   );
 };

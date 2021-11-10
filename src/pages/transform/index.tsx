@@ -1,29 +1,23 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Card, message, Table } from 'antd';
-import ProForm, { ProFormSelect, ProFormUploadDragger } from '@ant-design/pro-form';
-import { transformProductData, findDepartmentData } from '../../services/wood/api';
+import { Button, Card, message, Table, Typography } from 'antd';
+import ProForm, { ProFormUploadDragger } from '@ant-design/pro-form';
+import { transformProductData } from '../../services/wood/api';
 import proxy from './../../../config/proxy';
+import DepartmentSelect from './departmentSelect';
 
 export default (): React.ReactNode => {
-  const [submitResult, recordSubmitResult] = useState<
-    { fileName?: string; tableData?: API.ProductListItem[] } | undefined
+  const [submitResult, recordSubmitResult] = useState<API.TransformBack | undefined
   >();
 
-  const [depart, setDepart] = useState<Record<'value' | 'label', string>[]>([]);
 
-  useEffect(() => {
-    findDepartmentData({}).then((res) => {
-      const dataOut = (res?.data || []).map((v) => ({ value: v.code!, label: v.deName! }));
-      setDepart(dataOut);
-    });
-  }, []);
 
   const downloadUrl = useMemo(() => {
     const env = process.env.NODE_ENV;
-    const hrefPre = env === 'development' ? proxy.dev['/api/'].target : '//101.201.236.82';
+    const hrefPre = env === 'development' ? proxy.dev['/api/'].target : `//${window.location.host}/`;
     return hrefPre;
   }, []);
+
 
   return (
     <PageContainer>
@@ -65,7 +59,9 @@ export default (): React.ReactNode => {
                 if (result) {
                   recordSubmitResult({
                     fileName: (result as API.TransformBack)?.fileName,
-                    tableData: (result as API.TransformBack)?.productToday,
+                    productToday: (result as API.TransformBack)?.productToday,
+                    newConstomes: (result as API.TransformBack)?.newConstomes,
+                    productNew: (result as API.TransformBack)?.productNew,
                   });
                   message.success('上传成功');
                   return true;
@@ -75,12 +71,10 @@ export default (): React.ReactNode => {
                 return false;
               }}
             >
-              <ProFormSelect
-                options={depart}
-                name="department"
+              <DepartmentSelect name="department"
                 initialValue="gzlk11"
-                label="部门（统计字段）"
-              />
+                label="部门（统计字段）" />
+
               <ProFormUploadDragger
                 max={1}
                 name="file"
@@ -111,10 +105,40 @@ export default (): React.ReactNode => {
           )}
         </div>
       </Card>
+      {
+        (submitResult?.newConstomes || []).length > 0 && (
+          <Card title={<Typography.Title level={4} type="danger">没有三方用户ID的客户（需新增）!!</Typography.Title>}>
+            <Table
+              dataSource={submitResult?.newConstomes || []}
+              rowKey="id"
+              columns={[
+                { dataIndex: 'id', title: '商家编码' },
+                { dataIndex: 'name', title: '门店名称' },
+                { dataIndex: 'phone', title: '电话号码' },
+              ]}
+            />
+          </Card>
+        )
+      }
+
+      {
+        (submitResult?.productNew || []).length > 0 && (
+          <Card title={<Typography.Title type="danger" level={4} >尚未同步的商品!!</Typography.Title>}>
+            <Table
+              dataSource={submitResult?.productNew || []}
+              rowKey="code"
+              columns={[
+                { dataIndex: 'code', title: '食享商品编码' },
+                { dataIndex: 'name', title: '商品名称' },
+              ]}
+            />
+          </Card>
+        )
+      }
 
       <Card title="商品比对">
         <Table
-          dataSource={submitResult?.tableData || []}
+          dataSource={submitResult?.productToday || []}
           rowKey="_id"
           columns={[
             { dataIndex: 'code', title: '商品编码' },
