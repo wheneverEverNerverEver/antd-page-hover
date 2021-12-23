@@ -2,10 +2,11 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { Button, Card, Col, message, Popconfirm, Radio, Row, Space, Table, Tag } from 'antd';
-import ImportData from './ImportData';
+import ImportData, { labelItem } from './ImportData';
 import { PageContent } from '@/components/PageContent';
 import { deleteDepartmentData, findDepartmentData } from '@/services/wood/api';
 import { tagLabel } from '@/services/wood/dict';
+import { PermissionCN } from '@/components/PermissionCN';
 
 const ProjectItems: React.FC = () => {
   const [count, setCount] = useState(0);
@@ -21,20 +22,14 @@ const ProjectItems: React.FC = () => {
     getTableData();
   }, [getTableData]);
 
-  const radioOption = useMemo(() => ([{
-    label: '类别', value: 'CLASS'
-  }, {
-    label: '地区', value: 'DISTRICT'
-  }, {
-    label: '部门', value: 'DEPARTENT'
-  },]), [])
+  const radioOption = useMemo(() => (labelItem), [])
 
   return (
     <PageContent>
       <Space direction="vertical" style={{ width: '100%' }}>
         <Card >
           <Row>
-            <Col span={8}>
+            <Col span={20}>
               <Radio.Group
                 options={radioOption}
                 onChange={(e) => {
@@ -45,13 +40,15 @@ const ProjectItems: React.FC = () => {
                 buttonStyle="solid"
               />
             </Col>
-            <Col span={4} offset={12}>
-              <ImportData
-                refetch={() => {
-                  setCount((v) => v + 1);
-                }}
-              />
-            </Col>
+            <PermissionCN permissionKey="department:import">
+              <Col span={4} >
+                <ImportData
+                  refetch={() => {
+                    setCount((v) => v + 1);
+                  }}
+                />
+              </Col>
+            </PermissionCN>
           </Row>
 
 
@@ -74,28 +71,30 @@ const ProjectItems: React.FC = () => {
               dataIndex: '_id',
               title: '操作',
               render: (_, record) => (
-                <Popconfirm
-                  title="你确定要删除该项目吗？"
-                  onConfirm={async () => {
-                    if (record?._id) {
-                      const result = await deleteDepartmentData({ id: record._id });
-                      if (!(result as API.ErrorDe)?.error) {
-                        // 重新加载表格
-                        setCount((v) => v + 1);
-                        message.success('删除成功');
-                      } else {
-                        message.error('删除失败');
+                <PermissionCN permissionKey="department:delete">
+                  <Popconfirm
+                    title="你确定要删除该项目吗？"
+                    onConfirm={async () => {
+                      if (record?._id) {
+                        const result = await deleteDepartmentData({ id: record._id });
+                        if (!(result as API.ErrorDe)?.error) {
+                          // 重新加载表格
+                          setCount((v) => v + 1);
+                          message.success('删除成功');
+                        } else {
+                          message.error('删除失败');
+                        }
                       }
-                    }
-                  }}
-                  onCancel={() => { }}
-                  okText="确定"
-                  cancelText="否"
-                >
-                  <Button type="primary" danger>
-                    删除
-                  </Button>
-                </Popconfirm>
+                    }}
+                    onCancel={() => { }}
+                    okText="确定"
+                    cancelText="否"
+                  >
+                    <Button type="primary" danger>
+                      删除
+                    </Button>
+                  </Popconfirm>
+                </PermissionCN>
               ),
             },
           ]}

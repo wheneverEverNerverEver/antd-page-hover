@@ -4,32 +4,17 @@ import type { ProFormInstance } from '@ant-design/pro-form';
 import { ProFormRadio } from '@ant-design/pro-form';
 import { ModalForm, ProFormUploadDragger } from '@ant-design/pro-form';
 import { UploadOutlined } from '@ant-design/icons';
-import { importDepartmentData } from '@/services/wood/api';
+import { importBillData, importCoverBillData } from '@/services/wood/api';
+import { PermissionCN } from '@/components/PermissionCN';
 
 type FileForm = {
   file: any[];
-  labelType: API.LabelType
+  wayUp?: 'ADD' | 'COVER',
 };
-export const labelItem = [
-  {
-    label: '部门',
-    value: 'DEPARTENT',
-  },
-  {
-    label: '地区',
-    value: 'DISTRICT',
-  }, {
-    label: '类别',
-    value: 'CLASS',
-  }, {
-    label: '操作人(业务员&配送)',
-    value: 'STAFF',
-  }, {
-    label: '所属店铺',
-    value: 'BELONG',
-  },
-]
-const ImportData: React.FC<{ refetch?: () => void }> = (props) => {
+
+const ImportData: React.FC<{
+  refetch?: () => void,
+}> = (props) => {
   const { refetch } = props;
   const formRef = useRef<ProFormInstance<FileForm>>();
   return (
@@ -39,7 +24,7 @@ const ImportData: React.FC<{ refetch?: () => void }> = (props) => {
         maskClosable: false
       }}
       formRef={formRef}
-      title="导入"
+      title="导入欠单"
       trigger={
         <Button type="primary">
           <UploadOutlined /> 导入
@@ -52,29 +37,42 @@ const ImportData: React.FC<{ refetch?: () => void }> = (props) => {
       }}
       onFinish={async (values) => {
         const file = values.file?.[0]?.originFileObj;
+        const { wayUp } = values
         if (!file) {
           message.error('请选择文件');
           return false;
         }
-        const up = await importDepartmentData({ file }, values.labelType);
+        let up;
+        if (wayUp === 'COVER') {
+          up = await importCoverBillData({ file });
+        } else {
+          up = await importBillData({ file });
+        }
+
         refetch?.();
-        message.success(up ? '提交成功' : '提交失败');
+        message[up?.error ? 'error' : 'success'](up?.error ? '提交失败' : '提交成功');
         return true;
       }}
     >
-      <ProFormRadio.Group
-        name="labelType"
-        label="导入文件是属于："
-        placeholder="覆盖式导入，不在原基础上新增"
-        initialValue='DEPARTENT'
-        options={labelItem}
-        rules={[
-          {
-            required: true,
-            message: '请选择！',
-          },
-        ]}
-      />
+      <PermissionCN permissionKey="bill:importSmail">
+        <ProFormRadio.Group
+          style={{
+            margin: 16,
+          }}
+          name="wayUp"
+          radioType="button"
+          initialValue={"ADD"}
+          options={[
+            {
+              label: '新增导入数据',
+              value: 'ADD'
+            }, {
+              label: '覆盖式导入',
+              value: 'COVER'
+            },
+          ]}
+        />
+      </PermissionCN>
       <ProFormUploadDragger
         max={1}
         label="选择上传文件"

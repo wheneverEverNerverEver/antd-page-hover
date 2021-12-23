@@ -14,6 +14,10 @@ const ImportData: React.FC<Record<'refetch', () => void>> = (props) => {
   const formRef = useRef<ProFormInstance<FileForm>>();
   return (
     <ModalForm<FileForm>
+    modalProps={{
+      destroyOnClose: true,
+      maskClosable: false
+    }}
       formRef={formRef}
       title="导入商品"
       trigger={

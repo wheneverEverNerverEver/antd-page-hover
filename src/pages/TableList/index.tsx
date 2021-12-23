@@ -10,6 +10,7 @@ import OperateProduct from './components/UpdateForm';
 import ImportData from './components/ImportData';
 import { findProductData, deleteProductData } from '@/services/wood/api';
 import DownloadOutlined from '@ant-design/icons/lib/icons/DownloadOutlined';
+import { PermissionCN } from '@/components/PermissionCN';
 
 /**
  * @en-US Add node
@@ -104,28 +105,32 @@ const TableList: React.FC = () => {
       dataIndex: 'action',
       valueType: 'option',
       render: (_, record) => [
-        <OperateProduct type="UPDATE" values={record} refetchTableRef={actionRef} />,
-        <Popconfirm
-          title="你确定要删除该商品吗？"
-          onConfirm={async () => {
-            if (record._id) {
-              const result = await deleteProductData({ id: record._id });
-              if (!(result as API.ErrorDe)?.error) {
-                actionRef?.current?.reload();
-                message.success('删除成功');
-              } else {
-                message.error('删除失败');
+        <PermissionCN permissionKey="product:update">
+          <OperateProduct type="UPDATE" values={record} refetchTableRef={actionRef} />
+        </PermissionCN>,
+        <PermissionCN permissionKey="product:delete">
+          <Popconfirm
+            title="你确定要删除该商品吗？"
+            onConfirm={async () => {
+              if (record._id) {
+                const result = await deleteProductData({ id: record._id });
+                if (!(result as API.ErrorDe)?.error) {
+                  actionRef?.current?.reload();
+                  message.success('删除成功');
+                } else {
+                  message.error('删除失败');
+                }
               }
-            }
-          }}
-          onCancel={() => { }}
-          okText="确定"
-          cancelText="否"
-        >
-          <Button type="primary" danger>
-            删除
-          </Button>
-        </Popconfirm>,
+            }}
+            onCancel={() => { }}
+            okText="确定"
+            cancelText="否"
+          >
+            <Button type="primary" danger>
+              删除
+            </Button>
+          </Popconfirm>
+        </PermissionCN>,
       ],
     },
   ];
@@ -153,12 +158,17 @@ const TableList: React.FC = () => {
         }}
         options={false}
         toolBarRender={() => [
-          <OperateProduct type="ADD" refetchTableRef={actionRef} />,
-          <ImportData
-            refetch={() => {
-              actionRef?.current?.reload?.();
-            }}
-          />,
+          <PermissionCN permissionKey="product:add">
+            <OperateProduct type="ADD" refetchTableRef={actionRef} />
+          </PermissionCN>
+          ,
+          <PermissionCN permissionKey="product:import">
+            <ImportData
+              refetch={() => {
+                actionRef?.current?.reload?.();
+              }}
+            />
+          </PermissionCN>,
           <a style={{ display: 'inline-block' }} download href="/api/product/download">
             <Button icon={<DownloadOutlined />}>
               下载全部商品
@@ -184,7 +194,7 @@ const TableList: React.FC = () => {
             column={1}
             title={currentRow?.code}
             request={async () => ({
-              data: currentRow || { },
+              data: currentRow || {},
             })}
             params={{
               id: currentRow?.code,

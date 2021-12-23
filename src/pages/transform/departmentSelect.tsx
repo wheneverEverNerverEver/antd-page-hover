@@ -23,11 +23,12 @@ export function useFindDepartment(type?: API.LabelType) {
     return depart
 }
 
-const DepartmentSelect: React.FC<PropsWithChildren<ProFormSelectProps>> = (props) => {
-    const depart = useFindDepartment('DEPARTENT')
+const DepartmentSelect: React.FC<PropsWithChildren<ProFormSelectProps & { type?: API.LabelType }>> = (props) => {
+    const { type = 'DEPARTENT', ...rest } = props
+    const depart = useFindDepartment(type)
     return (<>
         <ProFormSelect
-            {...props}
+            {...rest}
             options={depart}
 
         /></>)

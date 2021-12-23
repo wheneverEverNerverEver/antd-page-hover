@@ -18,53 +18,89 @@
       },
     ],
   },
+  /** 订单转换   */
   {
     path: '/transform',
-    name: 'welcome',
+    name: 'transform',
     icon: 'smile',
-    component: './transform',
+    routes: [{
+      name: 'shixiang',
+      path: '/transform/shixiang',
+      component: './transform',
+    }, {
+      name: 'youzan',
+      path: '/transform/youzan',
+      component: './transform/youzanIndex',
+    }]
   },
+  /** 客户   */
   {
-    name: 'customer',
     path: '/customer',
     icon: 'form',
-    component: './customer',
+    name: 'customer',
+    routes: [
+      {
+        name: 'list',
+        path: '/customer/list',
+        component: './customer',
+      },
+      {
+        name: 'accounting',
+        path: '/customer/accounting',
+        component: './accounting',
+      }, {
+        name: 'transform',
+        path: '/customer/transform',
+        component: './customer/transformCustomer',
+      },
+      {
+        name: 'oneDetail',
+        path: '/customer/details/:id',
+        component: './customer/customerBillsDetail',
+        hideInMenu: true,
+        parentKeys: ['/customer'],
+      },
+    ],
   },
-  /** 暂时隐藏，功能待加
-  {
-    name: 'accounting',
-    path: '/accounting',
-    icon: 'warning',
-    component: './accounting',
-  },
-   */
+  /** 商品   */
   {
     name: 'admin',
     icon: 'table',
     path: '/list',
     component: './TableList',
   },
+  /** 分类   */
   {
     path: '/projectItems',
     name: 'projectItems',
     icon: 'picCenter',
     component: './projectItems',
   },
+
+  /** 系统用户相关管理   */
   {
-    path: '/loginAccount',
-    name: 'loginAccount',
+    path: '/treePlanting',
+    name: 'treePlanting',
     icon: 'car',
-    component: './loginAccount',
+    routes: [
+      {
+        path: '/treePlanting/account',
+        name: 'loginAccount',
+        component: './loginAccount',
+      },{
+        name: 'role',
+        path: '/treePlanting/role',
+        component: './role',
+      },{
+        name: 'log',
+        path: '/treePlanting/log',
+        component: './log',
+      },
+    ],
   },
-  // {
-  //   path: '/manager',
-  //   name: 'manager',
-  //   icon: 'contacts',
-  //   component: './Manager',
-  // },
   {
     path: '/',
-    redirect: '/transform',
+    redirect: '/transform/shixiang',
   },
   {
     component: './404',

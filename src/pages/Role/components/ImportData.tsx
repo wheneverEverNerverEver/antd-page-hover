@@ -1,20 +1,16 @@
 import React, { useRef } from 'react';
 import { Button, message } from 'antd';
 import type { ProFormInstance } from '@ant-design/pro-form';
-import { ProFormRadio } from '@ant-design/pro-form';
 import { ModalForm, ProFormUploadDragger } from '@ant-design/pro-form';
 import { UploadOutlined } from '@ant-design/icons';
-import { importCustomerData } from '@/services/wood/api';
+import { importCoverAuthData } from '@/services/wood/api';
 
 type FileForm = {
   file: any[];
-  labelType: API.LabelType
 };
 
-const ImportData: React.FC<{
-  refetch?: () => void, classoption: Record<"label" | "value", string>[]
-}> = (props) => {
-  const { refetch, classoption } = props;
+const ImportData: React.FC<Record<'refetch', () => void>> = (props) => {
+  const { refetch } = props;
   const formRef = useRef<ProFormInstance<FileForm>>();
   return (
     <ModalForm<FileForm>
@@ -23,10 +19,10 @@ const ImportData: React.FC<{
       maskClosable: false
     }}
       formRef={formRef}
-      title="导入客户"
+      title="导入权限数据"
       trigger={
         <Button type="primary">
-          <UploadOutlined /> 导入
+          <UploadOutlined /> 导入权限数据
         </Button>
       }
       onVisibleChange={(ifShow) => {
@@ -40,24 +36,12 @@ const ImportData: React.FC<{
           message.error('请选择文件');
           return false;
         }
-        const up = await importCustomerData({ file }, values.labelType);
+        const up = await importCoverAuthData({ file });
         refetch?.();
-        message.success(up ? '提交成功' : '提交失败');
+        message[up?.error ? 'error' : 'success'](up?.error ? '提交失败' : '提交成功');
         return true;
       }}
     >
-      <ProFormRadio.Group
-        name="labelType"
-        label="导入的客户类别："
-        options={classoption}
-        initialValue={classoption?.[0]?.value}
-        rules={[
-          {
-            required: true,
-            message: '请选择！',
-          },
-        ]}
-      />
       <ProFormUploadDragger
         max={1}
         label="选择上传文件"
@@ -65,7 +49,6 @@ const ImportData: React.FC<{
         name="file"
         accept=".xls,.xlsx"
       />
-
     </ModalForm>
   );
 };

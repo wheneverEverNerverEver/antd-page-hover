@@ -1,16 +1,26 @@
 /* eslint-disable no-underscore-dangle */
-import { message, Popconfirm, Button, Tag } from 'antd';
+import { Tag } from 'antd';
 import React, { useCallback, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import OperateTransform from './updateCustomer';
-import { findCustomerData, deleteCustomerData } from '@/services/wood/api';
+import { findCustomerData, findDepartmentData } from '@/services/wood/api';
 import { useFindDepartment } from '@/pages/transform/departmentSelect';
 import ImportData from './ImportData';
+import { Link } from 'react-router-dom';
+import { ProFormSelect } from '@ant-design/pro-form';
+import asyncDebounce from '@/components/asyncDebounce';
+import { labelValueEnd } from '../accounting';
+import { PermissionCN } from '@/components/PermissionCN';
 
 
 
+const afterDebouce = asyncDebounce(async (name) => {
+    const dataCome = await findDepartmentData({
+        deName: name?.keyWords,
+    }, 'STAFF')
+    return labelValueEnd(dataCome?.data || [], 'deName', 'code')
+}, 1000)
 
 const CustomerList: React.FC = () => {
 
@@ -28,20 +38,31 @@ const CustomerList: React.FC = () => {
             {
                 title: '用户ID',
                 dataIndex: 'code',
-                tip: '管家婆用户的ID',
-
             },
             {
                 title: '客户名称',
                 dataIndex: 'name',
                 valueType: 'text',
+                render: (_, record) => (
+                    <Link to={`/customer/details/${record?.code}`}>{record.name}</Link>
+                )
             }, {
-                title: '账期允可长度（天）',
-                dataIndex: 'deadline',
-                valueType: 'number',
-            }, {
-                title: '欠款总金额',
-                dataIndex: 'oweTotal',
+                title: '经手人',
+                dataIndex: 'manager',
+                render: (_, record) => {
+                    return record?.manager?.deName
+                },
+                renderFormItem: () => {
+                    return (
+                        <ProFormSelect
+                            name="manager"
+                            showSearch
+                            key={"ma"}
+                            request={afterDebouce as unknown as any}
+
+                        ></ProFormSelect>
+                    )
+                }
             },
             {
                 title: '类别',
@@ -59,36 +80,40 @@ const CustomerList: React.FC = () => {
                 render: (_, record) => {
                     return <Tag color={"orange"}>{record?.district?.deName}</Tag>
                 }
+            }, {
+                title: '待收款',
+                dataIndex: 'oweTotal',
+                valueType: 'text',
             },
-            {
-                title: '操作',
-                dataIndex: 'action',
-                valueType: 'option',
-                render: (_, record) => [
-                    <OperateTransform type="UPDATE" values={record} refetchTableRef={actionRef} />,
-                    <Popconfirm
-                        title="你确定要删除该规则吗？"
-                        onConfirm={async () => {
-                            if (record._id) {
-                                const result = await deleteCustomerData({ id: record._id });
-                                if (!(result as API.ErrorDe)?.error) {
-                                    actionRef?.current?.reload();
-                                    message.success('删除成功');
-                                } else {
-                                    message.error('删除失败');
-                                }
-                            }
-                        }}
-                        onCancel={() => { }}
-                        okText="确定"
-                        cancelText="否"
-                    >
-                        <Button type="primary" danger>
-                            删除
-                        </Button>
-                    </Popconfirm>,
-                ],
-            },
+            // {
+            //     title: '操作',
+            //     dataIndex: 'action',
+            //     valueType: 'option',
+            //     render: (_, record) => [
+            //         // <OperateTransform type="UPDATE" values={record} refetchTableRef={actionRef} />,
+            //         <Popconfirm
+            //             title="你确定要删除该规则吗？"
+            //             onConfirm={async () => {
+            //                 if (record._id) {
+            //                     const result = await deleteCustomerData({ id: record._id });
+            //                     if (!(result as API.ErrorDe)?.error) {
+            //                         actionRef?.current?.reload();
+            //                         message.success('删除成功');
+            //                     } else {
+            //                         message.error('删除失败');
+            //                     }
+            //                 }
+            //             }}
+            //             onCancel={() => { }}
+            //             okText="确定"
+            //             cancelText="否"
+            //         >
+            //             <Button type="primary" danger>
+            //                 删除
+            //             </Button>
+            //         </Popconfirm>,
+            //     ],
+            // },
         ] as ProColumns<API.CustomerType>[]
     }, [departments, classs]);
 
@@ -98,9 +123,7 @@ const CustomerList: React.FC = () => {
                 actionRef={actionRef}
                 rowKey="_id"
                 search={{
-                    defaultCollapsed: false,
                     labelWidth: 'auto',
-
                 }}
                 request={async (params) => {
                     // 表单搜索项会从 params 传入，传递给后端接口。
@@ -116,12 +139,16 @@ const CustomerList: React.FC = () => {
                 pagination={{
                     pageSizeOptions: ['10'],
                 }}
-                toolBarRender={() => [<ImportData
-                    refetch={() => {
-                        //   setCount((v) => v + 1);
-                    }}
-                    classoption={classs}
-                />]}
+                toolBarRender={(actionDo) => [
+                    <PermissionCN permissionKey="customer:import">
+                        <ImportData
+                            refetch={() => {
+                                actionDo?.reloadAndRest?.()
+                            }}
+                            classoption={classs}
+                        />
+                    </PermissionCN>
+                ]}
             />
 
         </PageContainer>

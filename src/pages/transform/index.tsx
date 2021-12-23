@@ -1,23 +1,14 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Card, message, Table, Typography } from 'antd';
 import ProForm, { ProFormUploadDragger } from '@ant-design/pro-form';
 import { transformProductData } from '../../services/wood/api';
-import proxy from './../../../config/proxy';
 import DepartmentSelect from './departmentSelect';
+import { DownloadComponent } from '@/components/DownloadUrl';
 
 export default (): React.ReactNode => {
   const [submitResult, recordSubmitResult] = useState<API.TransformBack | undefined
   >();
-
-
-
-  const downloadUrl = useMemo(() => {
-    const env = process.env.NODE_ENV;
-    const hrefPre = env === 'development' ? proxy.dev['/api/'].target : `//${window.location.host}/`;
-    return hrefPre;
-  }, []);
-
 
   return (
     <PageContainer>
@@ -88,21 +79,7 @@ export default (): React.ReactNode => {
               />
             </ProForm>
           </Card>
-          {submitResult?.fileName && (
-            <a
-              href={`${downloadUrl}${submitResult?.fileName}`}
-              style={{ display: 'block', padding: '0 5%', boxSizing: 'border-box' }}
-            >
-              <Button
-                type="primary"
-                danger
-                style={{ width: '100%', margin: '5px auto' }}
-                size="large"
-              >
-                下载转换后的文件
-              </Button>
-            </a>
-          )}
+          <DownloadComponent fileName={submitResult?.fileName} />
         </div>
       </Card>
       {
@@ -139,7 +116,7 @@ export default (): React.ReactNode => {
       <Card title="商品比对">
         <Table
           dataSource={submitResult?.productToday || []}
-          rowKey="_id"
+          rowKey="code"
           columns={[
             { dataIndex: 'code', title: '商品编码' },
             { dataIndex: 'nameSx', title: '食享名称' },

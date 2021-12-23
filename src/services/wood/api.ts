@@ -1,6 +1,7 @@
+
 import type { RequestData } from '@ant-design/pro-table';
-import { history } from 'umi'
-// import { request } from './newRequest';
+import type { DataNode } from 'antd/lib/tree';
+
 import request from 'umi-request';
 
 export function gotToken() {
@@ -35,7 +36,10 @@ request.interceptors.request.use((url, options) => {
 
 
 // clone response in response interceptor
-request.interceptors.response.use(async response => {
+request.interceptors.response.use(async (response, options) => {
+  if (options?.responseType === 'blob') {
+    return response;
+  }
   const { url, headers } = response;
   const tokenGot = headers?.get('token');
   const isLogin = /\/api\/login\/account/.test(url)
@@ -46,7 +50,7 @@ request.interceptors.response.use(async response => {
   }
 
   if (data && data === 'NEED LOGIN' || `${response.status}` === '211' || (!isLogin && !tokenGotF)) {
-    history.push('/user/login');
+    window.open(`${window.location.origin}/user/login`, '_self');
     localStorage.removeItem('USER_TOKEN');
     throw Error('请登录后进行操作');
   }
@@ -94,6 +98,14 @@ export async function deleteUser(params: { id: string }, options?: Record<string
   return request<API.UserItem | API.ErrorDe>('/api/account/delete', {
     method: 'GET',
     params,
+    ...(options || {}),
+  });
+}
+/** 编辑用户  */
+export async function updateUser(params: { id: string } & API.UserItem, options?: Record<string, any>) {
+  return request<API.UserItem | API.ErrorDe>('/api/account/update', {
+    method: 'POST',
+    data: params,
     ...(options || {}),
   });
 }
@@ -172,6 +184,7 @@ export async function transformProductData(
     ...(options || {}),
   });
 }
+
 
 /** ------------------->>>>>>>>>>>>>> 部门  */
 export async function importDepartmentData(body: { file: any }, labelType: API.LabelType, options?: Record<string, any>) {
@@ -259,15 +272,14 @@ export async function importCustomerData(body: { file: any }, labelType: API.Lab
   });
 }
 /** 新增 */
-export async function addCustomerData(params: API.CustomerType) {
-  console.log('=====>>>>>>>params', params)
-  return request<API.CustomerType | API.ErrorDe>('/api/customer/add', {
-    method: 'POST',
-    data: {
-      ...params
-    },
-  });
-}
+// export async function addCustomerData(params: API.CustomerType) {
+//   return request<API.CustomerType | API.ErrorDe>('/api/customer/add', {
+//     method: 'POST',
+//     data: {
+//       ...params
+//     },
+//   });
+// }
 /** 删除 */
 export async function deleteCustomerData(params: { id?: string }) {
   return request<API.ErrorDe>('/api/customer/delete', {
@@ -289,5 +301,174 @@ export async function findCustomerData(params: API.QueryManager, options?: Recor
     ...(options || {}),
   });
 }
+/** *
+ * 导入有赞客户前
+ */
+export async function transformCustomerYZ(
+  body: { file: any },
+  belong?: string,
+  options?: Record<string, any>,
+) {
+  const formData = new FormData();
+  formData.append('ToyouzanCustomer', body.file);
+  return request<any>('/api/customer/transformYZSVC', {
+    method: 'POST',
+    data: formData,
+    params: {
+      belong,
+    },
+    requestType: 'form',
+    // responseType: 'blob',
+    ...(options || {}),
+  })
+  // .then(res => res.blob());
+}
 /** ------------------->>>>>>>>>>>>>> 客户---------<<<<<<<<  */
+
+/** ------------------->>>>>>>>>>>>>>欠单---------------------  */
+/** 下载所有欠单 */
+export async function downloadBillData(params: API.BillType, options?: Record<string, any>) {
+  return request<unknown>('/api/bill/download', {
+    method: 'GET',
+    params,
+    ...(options || {}),
+  });
+}
+export async function importBillData(body: { file: any }, options?: Record<string, any>) {
+  const formData = new FormData();
+  formData.append('file', body.file);
+  return request<API.BackFromUp>('/api/bill/import', {
+    method: 'POST',
+    data: formData,
+    requestType: 'form',
+    ...(options || {}),
+  });
+}
+export async function importImgData(body: { file: any }, orderCode: string, options?: Record<string, any>) {
+  const formData = new FormData();
+  formData.append('file', body.file);
+  return request<API.BackFromUp>('/api/bill/image', {
+    method: 'POST',
+    data: formData,
+    params: {
+      orderCode,
+    },
+    requestType: 'form',
+    ...(options || {}),
+  });
+}
+/** 覆盖式导入 */
+export async function importCoverBillData(body: { file: any }, options?: Record<string, any>) {
+  const formData = new FormData();
+  formData.append('file', body.file);
+  return request<API.BackFromUp>('/api/bill/importSmail', {
+    method: 'POST',
+    data: formData,
+    requestType: 'form',
+    ...(options || {}),
+  });
+}
+/** 新增 */
+// export async function addBillData(params: API.BillType) {
+//   return request<API.BillType | API.ErrorDe>('/api/bill/add', {
+//     method: 'POST',
+//     data: {
+//       ...params
+//     },
+//   });
+// }
+/** 删除 */
+// export async function deleteBillData(params: { id?: string }) {
+//   return request<API.ErrorDe>('/api/bill/delete', {
+//     method: 'GET',
+//     params,
+//   });
+// }
+/** 编辑 */
+export async function updateBillData(id: string, params: API.BillType) {
+  return request<API.BillType & { id: string } | API.ErrorDe>('/api/bill/update', {
+    method: 'POST',
+    data: {
+      id,
+      ...params
+    },
+  });
+}
+export async function findBillData(params: API.QueryBill, options?: Record<string, any>) {
+  return request<Partial<RequestData<API.BillType>>>('/api/bill/find', {
+    method: 'GET',
+    params,
+    ...(options || {}),
+  });
+}
+/** ------------------->>>>>>>>>>>>>> 欠单---------<<<<<<<<  */
+
+
+/** >>>>>>>>>>>>>> ==========================权限=============================<<<<<<<<  */
+export async function importCoverAuthData(body: { file: any }, options?: Record<string, any>) {
+  const formData = new FormData();
+  formData.append('file', body.file);
+  return request<API.BackFromUp>('/api/role/authImport', {
+    method: 'POST',
+    data: formData,
+    requestType: 'form',
+    ...(options || {}),
+  });
+}
+export async function findAuthData(params: API.PageType, options?: Record<string, any>) {
+  return request<DataNode[]>('/api/role/authfind', {
+    method: 'GET',
+    params,
+    ...(options || {}),
+  });
+}
+/** >>>>>>>>>>>>>> -----------------------------------------------------------<<<<<<<<  */
+/** >>>>>>>>>>>>>> ===========================================================<<<<<<<<  */
+
+
+/** >>>>>>>>>>>>>> ==========================角色=============================<<<<<<<<  */
+export async function findRoleData(params: API.BaseQuery, options?: Record<string, any>) {
+  return request<Partial<RequestData<API.RoleType>>>('/api/role/find', {
+    method: 'GET',
+    params,
+    ...(options || {}),
+  });
+}
+/** 新增 */
+export async function addRoleData(params: API.RoleType) {
+  return request<API.RoleType | API.ErrorDe>('/api/role/add', {
+    method: 'POST',
+    data: {
+      ...params
+    },
+  });
+}
+/** 删除 */
+export async function deleteRoleData(params: { id?: string }) {
+  return request<API.ErrorDe>('/api/role/delete', {
+    method: 'GET',
+    params,
+  });
+}
+/** 编辑 */
+export async function updateRoleData(id: string, params: API.RoleType) {
+  return request<API.RoleType & { id: string } | API.ErrorDe>('/api/role/update', {
+    method: 'POST',
+    data: {
+      id,
+      ...params
+    },
+  });
+}
+/** >>>>>>>>>>>>>> -----------------------------------------------------------<<<<<<<<  */
+// 日志
+export async function findLogData(params: API.LogType & API.BaseQuery, options?: Record<string, any>) {
+  return request<Partial<RequestData<API.RoleType>>>('/api/log/find', {
+    method: 'GET',
+    params,
+    ...(options || {}),
+  });
+}
+/** >>>>>>>>>>>>>> ===========================================================<<<<<<<<  */
+
 
