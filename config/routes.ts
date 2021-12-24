@@ -28,8 +28,10 @@
       path: '/transform/shixiang',
       component: './transform',
     }, {
+      /**未完善，先隐藏 */
       name: 'youzan',
       path: '/transform/youzan',
+      hideInMenu: true,
       component: './transform/youzanIndex',
     }]
   },
@@ -87,11 +89,11 @@
         path: '/treePlanting/account',
         name: 'loginAccount',
         component: './loginAccount',
-      },{
+      }, {
         name: 'role',
         path: '/treePlanting/role',
         component: './role',
-      },{
+      }, {
         name: 'log',
         path: '/treePlanting/log',
         component: './log',
