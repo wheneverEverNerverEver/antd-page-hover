@@ -40,6 +40,7 @@ declare namespace API {
     deName?: string;
     code?: string;
     _id?: string;
+    label?:LabelType
   };
 
   type TransformRule = {

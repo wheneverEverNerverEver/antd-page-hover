@@ -5,30 +5,13 @@ import { ProFormRadio } from '@ant-design/pro-form';
 import { ModalForm, ProFormUploadDragger } from '@ant-design/pro-form';
 import { UploadOutlined } from '@ant-design/icons';
 import { importDepartmentData } from '@/services/wood/api';
+import { labelItem } from '@/services/wood/dict';
 
 type FileForm = {
   file: any[];
   labelType: API.LabelType
 };
-export const labelItem = [
-  {
-    label: '部门',
-    value: 'DEPARTENT',
-  },
-  {
-    label: '地区',
-    value: 'DISTRICT',
-  }, {
-    label: '类别',
-    value: 'CLASS',
-  }, {
-    label: '操作人(业务员&配送)',
-    value: 'STAFF',
-  }, {
-    label: '所属店铺',
-    value: 'BELONG',
-  },
-]
+
 const ImportData: React.FC<{ refetch?: () => void }> = (props) => {
   const { refetch } = props;
   const formRef = useRef<ProFormInstance<FileForm>>();

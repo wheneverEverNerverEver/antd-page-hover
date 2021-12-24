@@ -1,18 +1,18 @@
 export const tagLabel: API.TagLable = {
     'CLASS': {
         color: 'purple',
-        label: '类别',
+        label: '来源平台',
     },
     'DISTRICT': {
         color: 'cyan',
-        label: '地区',
+        label: '单据经手人',
     },
     'DEPARTENT': {
         color: 'magenta',
-        label: '部门',
+        label: '单据部门',
     },
     'STAFF': {
-        color: 'green',
+        color: '默认业务员',
         label: '操作人',
     }, 'BELONG': {
         color: 'orange',
@@ -20,6 +20,28 @@ export const tagLabel: API.TagLable = {
     },
 
 }
+export const labelItem: {
+    label: string,
+    value: API.LabelType
+}[] = [
+        {
+            label: '单据部门',
+            value: 'DEPARTENT',
+        },
+        {
+            label: '来源平台',
+            value: 'CLASS',
+        }, {
+            label: '默认业务员',
+            value: 'STAFF',
+        }, {
+            label: '所属店铺',
+            value: 'BELONG',
+        }, {
+            label: '单据经手人',
+            value: 'DISTRICT',
+        },
+    ]
 // '3_OWE' | '1_SERIOUS_DELAY' | '2_HIGH_DELAY'
 export const stateColor: API.ColorAndLabel<API.StatusBill> = {
     '2_HIGH_DELAY': {

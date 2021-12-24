@@ -18,7 +18,10 @@ import { PermissionCN } from '@/components/PermissionCN';
 const afterDebouce = asyncDebounce(async (name) => {
     const dataCome = await findDepartmentData({
         deName: name?.keyWords,
-    }, 'STAFF')
+        limit: 10,
+        page: 1,
+        label: 'STAFF'
+    })
     return labelValueEnd(dataCome?.data || [], 'deName', 'code')
 }, 1000)
 

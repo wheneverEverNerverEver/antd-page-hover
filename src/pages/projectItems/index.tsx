@@ -1,105 +1,96 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-underscore-dangle */
-import React, { useCallback, useState, useEffect, useMemo } from 'react';
-import { Button, Card, Col, message, Popconfirm, Radio, Row, Space, Table, Tag } from 'antd';
-import ImportData, { labelItem } from './ImportData';
+import React, { useMemo, useRef } from 'react';
+import { Button, message, Popconfirm, Tag } from 'antd';
+import ImportData from './ImportData';
 import { PageContent } from '@/components/PageContent';
 import { deleteDepartmentData, findDepartmentData } from '@/services/wood/api';
-import { tagLabel } from '@/services/wood/dict';
+import { labelItem, tagLabel } from '@/services/wood/dict';
 import { PermissionCN } from '@/components/PermissionCN';
+import type { ActionType } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 
 const ProjectItems: React.FC = () => {
-  const [count, setCount] = useState(0);
-  const [valueRa, setValueRa] = useState<API.LabelType>('DEPARTENT');
-  const [tableDate, setTableDate] = useState<API.DepartmentItem[]>();
-
-  const getTableData = useCallback(async () => {
-    const dataAll = await findDepartmentData({}, valueRa);
-    setTableDate(dataAll?.data || []);
-  }, [count, setTableDate, valueRa]);
-
-  useEffect(() => {
-    getTableData();
-  }, [getTableData]);
+  const tableRef = useRef<ActionType>()
 
   const radioOption = useMemo(() => (labelItem), [])
 
   return (
     <PageContent>
-      <Space direction="vertical" style={{ width: '100%' }}>
-        <Card >
-          <Row>
-            <Col span={20}>
-              <Radio.Group
-                options={radioOption}
-                onChange={(e) => {
-                  setValueRa(e.target.value)
-                }}
-                value={valueRa}
-                optionType="button"
-                buttonStyle="solid"
-              />
-            </Col>
-            <PermissionCN permissionKey="department:import">
-              <Col span={4} >
-                <ImportData
-                  refetch={() => {
-                    setCount((v) => v + 1);
-                  }}
-                />
-              </Col>
-            </PermissionCN>
-          </Row>
+      <ProTable<API.DepartmentItem, Record<any, string>>
+        actionRef={tableRef}
+        rowKey="_id"
+        options={false}
+        request={async (params) => {
+          // 表单搜索项会从 params 传入，传递给后端接口。
+          const { current, pageSize, ...rest } = params;
+          return findDepartmentData({
+            limit: pageSize,
+            page: current,
+            ...rest,
+          });
+        }}
 
+        search={{
+          span: 12,
+          labelWidth: 'auto',
+        }}
 
-        </Card>
-
-        <Table
-          dataSource={tableDate || []}
-          rowKey="_id"
-
-          columns={[
-            { dataIndex: 'code', title: '编码' },
-            { dataIndex: 'deName', title: '名称' },
-            {
-              dataIndex: 'label', title: '类别', render: (val) => {
-                const colorAndLable = tagLabel[val]
-                return (<Tag color={colorAndLable?.color}>{colorAndLable?.label}</Tag>)
-              }
+        columns={[
+          { dataIndex: 'code', title: '编码', hideInSearch: true },
+          { dataIndex: 'deName', title: '名称', hideInSearch: true },
+          {
+            dataIndex: 'label',
+            title: '类别',
+            render: (_, record: API.DepartmentItem) => {
+              const colorAndLable = record?.label && tagLabel[record?.label]
+              return (<Tag color={colorAndLable?.color}>{colorAndLable?.label}</Tag>)
             },
-            {
-              dataIndex: '_id',
-              title: '操作',
-              render: (_, record) => (
-                <PermissionCN permissionKey="department:delete">
-                  <Popconfirm
-                    title="你确定要删除该项目吗？"
-                    onConfirm={async () => {
-                      if (record?._id) {
-                        const result = await deleteDepartmentData({ id: record._id });
-                        if (!(result as API.ErrorDe)?.error) {
-                          // 重新加载表格
-                          setCount((v) => v + 1);
-                          message.success('删除成功');
-                        } else {
-                          message.error('删除失败');
-                        }
+            valueType: 'radioButton',
+            request: async () => (radioOption)
+          },
+          {
+            dataIndex: '_id',
+            title: '操作',
+            hideInSearch: true,
+            render: (_, record: API.DepartmentItem) => (
+              <PermissionCN permissionKey="department:delete">
+                <Popconfirm
+                  title="你确定要删除该项目吗？"
+                  onConfirm={async () => {
+                    if (record?._id) {
+                      const result = await deleteDepartmentData({ id: record._id });
+                      if (!(result as API.ErrorDe)?.error) {
+                        // 重新加载表格
+                        tableRef?.current?.reloadAndRest?.();
+                        message.success('删除成功');
+                      } else {
+                        message.error('删除失败');
                       }
-                    }}
-                    onCancel={() => { }}
-                    okText="确定"
-                    cancelText="否"
-                  >
-                    <Button type="primary" danger>
-                      删除
-                    </Button>
-                  </Popconfirm>
-                </PermissionCN>
-              ),
-            },
-          ]}
-        />
-      </Space>
+                    }
+                  }}
+                  onCancel={() => { }}
+                  okText="确定"
+                  cancelText="否"
+                >
+                  <Button type="primary" danger>
+                    删除
+                  </Button>
+                </Popconfirm>
+              </PermissionCN>
+            ),
+          },
+        ]}
+        toolBarRender={() => {
+          return [(
+            <ImportData
+              refetch={() => {
+                tableRef?.current?.reloadAndRest?.();
+              }}
+            />
+          )]
+        }}
+      />
     </PageContent>
   );
 };

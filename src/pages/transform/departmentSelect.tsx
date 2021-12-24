@@ -9,7 +9,7 @@ export function useFindDepartment(type?: API.LabelType) {
 
     useEffect(() => {
         const fetchData = async () => {
-            findDepartmentData({}, type).then((res) => {
+            findDepartmentData({ label: type }).then((res) => {
                 // eslint-disable-next-line no-underscore-dangle
                 const dataOut = (res?.data || []).map((v) => ({ value: v.code!, label: v.deName!, id: v._id! }));
                 setDepart(dataOut);

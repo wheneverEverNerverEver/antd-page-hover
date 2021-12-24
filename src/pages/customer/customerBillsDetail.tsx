@@ -90,7 +90,7 @@ export default (): React.ReactNode => {
                     >
                         <Card>
                             <Row align="middle" justify="center" style={{
-                                borderBottom: '1px solid #d9d9d9'
+                                borderBottom: '4px solid rgb(255 92 99)'
                             }}>
                                 <Col span={16}>
                                     <Typography.Title level={5} >{dataShow?.name}</Typography.Title>

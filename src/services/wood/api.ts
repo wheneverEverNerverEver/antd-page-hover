@@ -201,15 +201,13 @@ export async function importDepartmentData(body: { file: any }, labelType: API.L
   });
 }
 export async function findDepartmentData(
-  params: API.DepartmentItem,
-  type?: API.LabelType,
+  params: API.DepartmentItem & API.BaseQuery,
   options?: Record<string, any>,
 ) {
   return request<Partial<RequestData<API.DepartmentItem>>>('/api/department/find', {
     method: 'GET',
     params: {
       ...params,
-      labelType: type
     },
     ...(options || {}),
   });

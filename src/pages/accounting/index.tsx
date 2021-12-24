@@ -194,15 +194,20 @@ const AccountingList: React.FC = () => {
     const afterManageDebouce = asyncDebounce(async (name) => {
         const dataCome = await findDepartmentData({
             deName: name?.keyWords,
-
-        }, 'STAFF')
+            limit:10,
+            page: 1,
+            label: 'DISTRICT'
+        })
         return labelValueEnd(dataCome?.data || [], 'deName', 'code')
     }, 1000)
 
     const afterDeliveryDebouce = asyncDebounce(async (name) => {
         const dataCome = await findDepartmentData({
             deName: name?.keyWords,
-        }, 'DEPARTENT')
+            limit: 10,
+            page: 1,
+            label: 'DEPARTENT'
+        })
         return labelValueEnd(dataCome?.data || [], 'deName', 'code')
     }, 1000)
 
