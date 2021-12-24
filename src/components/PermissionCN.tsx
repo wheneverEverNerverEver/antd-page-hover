@@ -53,7 +53,7 @@ export type PermissionKey =
 export function PermissionCN(props: PropsWithChildren<{ permissionKey: PermissionKey }>) {
     const { permissionKey, children } = props
     const { initialState } = useModel('@@initialState');
-    if (includes(initialState?.currentUser?.roleCode || [], permissionKey) || initialState?.currentUser?.accountName === 'admin1') {
+    if (includes(initialState?.currentUser?.roleCode || [], permissionKey)) {
         return (<>{children}</>)
     }
     return (<></>);

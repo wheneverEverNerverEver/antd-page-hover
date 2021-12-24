@@ -194,7 +194,7 @@ const AccountingList: React.FC = () => {
     const afterManageDebouce = asyncDebounce(async (name) => {
         const dataCome = await findDepartmentData({
             deName: name?.keyWords,
-            limit:10,
+            limit: 10,
             page: 1,
             label: 'DISTRICT'
         })

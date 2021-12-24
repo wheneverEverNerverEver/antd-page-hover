@@ -22,12 +22,44 @@ function gotNumerIdexArray(len: number) {
     }
     return outArr
 }
+function getValue(value) {
+    return Number(value) * 100 || 0;
+}
+function getBackReallyNumber(value) {
+    return Number(value) / 100 || 0;
+}
 
+
+// 数组与之前的数字累加
+function arrAddItemBefore<T extends Record<string, unknown>>(
+    arr?: T[],
+    addItem?: keyof T,
+    outItem?: keyof T
+) {
+    const arrLen = arr?.length
+    if (!arrLen || !addItem || !outItem) return '';
+    const dataBack: T[] = []
+    let total = 0
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < arrLen; i++) {
+        const tempItem = arr[i];
+        const tempNumber = getValue(tempItem?.[addItem]) + getValue(total)
+        total = getBackReallyNumber(tempNumber)
+        dataBack.push({
+            ...tempItem,
+            [outItem]: total
+        })
+    }
+
+    return dataBack
+}
 
 
 export default (): React.ReactNode => {
     const { id } = useParams<{ id?: string }>()
-    const [dataCome, setDataCome] = useState<API.BillType[]>()
+    const [dataCome, setDataCome] = useState<API.BillType & {
+        amountBefore: number
+    }[]>()
     const pngNodeRef = useRef<HTMLDivElement>(null)
     const [imageSrc, setImageSrc] = useState<string>()
 
@@ -37,7 +69,9 @@ export default (): React.ReactNode => {
             page: 1,
             customer: idGot
         });
-        setDataCome(dataFi?.data || [])
+        // amountBefore
+        const finaArr = arrAddItemBefore(dataFi?.data, 'amount', 'amountBefore')
+        setDataCome(finaArr)
     }, [])
 
     useEffect(() => {
@@ -121,6 +155,10 @@ export default (): React.ReactNode => {
                                 {
                                     title: '金额',
                                     dataIndex: 'amount',
+                                }, {
+                                    title: '累计金额',
+                                    dataIndex: 'amountBefore',
+                                    render: (_, record) => <Typography.Text type="danger">* {record?.amountBefore}</Typography.Text>
                                 }
                             ]}
                             style={{
