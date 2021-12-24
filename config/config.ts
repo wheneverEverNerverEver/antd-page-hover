@@ -6,11 +6,12 @@ import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 
+
 const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
   hash: true,
-  antd: { },
+  antd: {},
   dva: {
     hmr: true,
   },
@@ -42,7 +43,7 @@ export default defineConfig({
   },
   // esbuild is father build tools
   // https://umijs.org/plugins/plugin-esbuild
-  esbuild: { },
+  esbuild: {},
   title: false,
   ignoreMomentLocale: true,
   proxy: proxy[REACT_APP_ENV || 'dev'],
@@ -50,7 +51,7 @@ export default defineConfig({
     basePath: '/',
   },
   // Fast Refresh 热更新
-  fastRefresh: { },
+  fastRefresh: {},
   // openAPI: [
   //   {
   //     requestLibPath: "import { request } from 'umi'",
@@ -66,7 +67,7 @@ export default defineConfig({
   //   },
   // ],
   nodeModulesTransform: { type: 'none' },
-  mfsu: { },
-  webpack5: { },
-  exportStatic: { },
+  mfsu: {},
+  webpack5: {},
+  exportStatic: {},
 });
