@@ -61,7 +61,17 @@ request.interceptors.response.use(async (response, options) => {
   return response;
 });
 
-
+/** 登录接口 POST /api/login/account */
+export async function logoutAccount(body: API.LoginParams, options?: Record<string, any>) {
+  return request<API.ErrorDe>('/api/logout/account', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
 
 /** 登录接口 POST /api/login/account */
 export async function login(body: API.LoginParams, options?: Record<string, any>) {

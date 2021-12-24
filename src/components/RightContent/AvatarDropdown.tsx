@@ -6,6 +6,7 @@ import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import type { MenuInfo } from 'rc-menu/lib/interface';
+import { logoutAccount } from '@/services/wood/api';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -36,7 +37,11 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       const { key } = event;
       if (key === 'logout') {
         setInitialState((s) => ({ ...s, currentUser: undefined }));
-        loginOut();
+        logoutAccount({}).then(res => {
+          if (!(res?.error)) {
+            loginOut();
+          }
+        })
         return;
       }
       history.push(`/account/${key}`);
