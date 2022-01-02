@@ -22,7 +22,7 @@ declare namespace API {
     _id?: string;
     role?: string;
     roleObj?: RoleType
-    roleCode?:string[]
+    roleCode?: string[]
   };
 
   type ErrorDe = {
@@ -40,7 +40,7 @@ declare namespace API {
     deName?: string;
     code?: string;
     _id?: string;
-    label?:LabelType
+    label?: LabelType
   };
 
   type TransformRule = {
@@ -98,6 +98,7 @@ declare namespace API {
     page?: number;
     deName?: string
     name?: string
+    manager?: string
   };
   type BaseQuery = {
     limit?: number;
@@ -187,6 +188,20 @@ declare namespace API {
     _id?: string
     imgUploader?: string
   }
+  type LabelTypeOption = { label?: string, value?: string }
+  type QueryBillObj = {
+    limit?: number;
+    page?: number;
+
+    //仅对名称查询
+    customer?: LabelTypeOption
+    orderCode?: string
+    manager?: LabelTypeOption
+    delivery?: LabelTypeOption,
+    startTime?: string[]
+    amount?: string
+    state?: StatusBillWord
+  };
   type QueryBill = {
     limit?: number;
     page?: number;

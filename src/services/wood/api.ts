@@ -404,8 +404,10 @@ export async function updateBillData(id: string, params: API.BillType) {
 }
 export async function findBillData(params: API.QueryBill, options?: Record<string, any>) {
   return request<Partial<RequestData<API.BillType>>>('/api/bill/find', {
-    method: 'GET',
-    params,
+    method: 'POST',
+    data: {
+      ...params
+    },
     ...(options || {}),
   });
 }

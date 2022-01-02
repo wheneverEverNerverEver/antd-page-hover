@@ -1,5 +1,6 @@
 
 import type { PropsWithChildren } from 'react';
+import { useMemo } from 'react';
 import { useModel } from 'umi';
 import { includes } from 'lodash';
 
@@ -53,7 +54,9 @@ export type PermissionKey =
 export function PermissionCN(props: PropsWithChildren<{ permissionKey: PermissionKey }>) {
     const { permissionKey, children } = props
     const { initialState } = useModel('@@initialState');
-    if (includes(initialState?.currentUser?.roleCode || [], permissionKey)) {
+    const ifHadPer = useMemo(() => includes(initialState?.currentUser?.roleCode || [], permissionKey), [initialState, permissionKey])
+
+    if (ifHadPer) {
         return (<>{children}</>)
     }
     return (<></>);

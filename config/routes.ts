@@ -60,7 +60,7 @@
         path: '/customer/details/:id',
         component: './customer/customerBillsDetail',
         hideInMenu: true,
-        parentKeys: ['/customer'],
+        parentKeys: ['/customer/list', '/customer/transform'],
       },
     ],
   },

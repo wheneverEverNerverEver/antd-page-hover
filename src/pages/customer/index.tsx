@@ -8,7 +8,6 @@ import { findCustomerData, findDepartmentData } from '@/services/wood/api';
 import { useFindDepartment } from '@/pages/transform/departmentSelect';
 import ImportData from './ImportData';
 import { Link } from 'react-router-dom';
-import { ProFormSelect } from '@ant-design/pro-form';
 import asyncDebounce from '@/components/asyncDebounce';
 import { labelValueEnd } from '../accounting';
 import { PermissionCN } from '@/components/PermissionCN';
@@ -41,30 +40,25 @@ const CustomerList: React.FC = () => {
             {
                 title: '用户ID',
                 dataIndex: 'code',
+                valueType: 'text',
             },
             {
                 title: '客户名称',
                 dataIndex: 'name',
                 valueType: 'text',
-                render: (_, record) => (
-                    <Link to={`/customer/details/${record?.code}`}>{record.name}</Link>
-                )
+                render: (_, record) => (<Link to={`/customer/details/${record?.code}`}>{record.name}</Link>)
             }, {
                 title: '经手人',
                 dataIndex: 'manager',
                 render: (_, record) => {
                     return record?.manager?.deName
                 },
-                renderFormItem: () => {
-                    return (
-                        <ProFormSelect
-                            name="manager"
-                            showSearch
-                            key={"ma"}
-                            request={afterDebouce as unknown as any}
-
-                        ></ProFormSelect>
-                    )
+                valueType: 'select',
+                request: afterDebouce as any,
+                fieldProps: {
+                    onSearch: afterDebouce as any,
+                    labelInValue: true,
+                    showSearch: true,
                 }
             },
             {
@@ -126,22 +120,21 @@ const CustomerList: React.FC = () => {
                 actionRef={actionRef}
                 rowKey="_id"
                 search={{
-                    labelWidth: 'auto',
+                    collapsed: false,
+                    collapseRender: false,
                 }}
                 request={async (params) => {
                     // 表单搜索项会从 params 传入，传递给后端接口。
-                    const { current, pageSize, ...rest } = params;
+                    const { current, pageSize, manager, ...rest } = params;
                     return findCustomerData({
                         limit: pageSize,
                         page: current,
+                        manager: (manager as API.LabelTypeOption)?.value,
                         ...rest,
                     });
                 }}
                 options={false}
                 columns={columns()}
-                pagination={{
-                    pageSizeOptions: ['10'],
-                }}
                 toolBarRender={(actionDo) => [
                     <PermissionCN permissionKey="customer:import">
                         <ImportData

@@ -4,6 +4,6 @@
 export default function access(initialState: { currentUser?: API.UserItem | undefined }) {
   const { currentUser } = initialState || {};
   return {
-    canAdmin: currentUser && currentUser.roleObj?.roleName === '管理员',
+    canAdmin: currentUser && currentUser.roleCode,
   };
 }

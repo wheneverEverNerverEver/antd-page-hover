@@ -1,13 +1,15 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Card, Col, Collapse, Empty, Row, Typography } from 'antd';
+import { Button, Card, Col, Collapse, Empty, message, Popconfirm, Row, Typography } from 'antd';
 import { useParams } from 'react-router-dom';
-import { findBillData } from '@/services/wood/api';
+import { findBillData, updateBillData } from '@/services/wood/api';
 import { format } from 'date-fns'
 import ImportImg from '../accounting/ImportImg';
 import ProTable from '@ant-design/pro-table';
 import html2canvas from 'html2canvas'
 import CoverImage from './coverImage';
+import { PermissionCN } from '@/components/PermissionCN';
 
 
 const { Panel } = Collapse;
@@ -22,10 +24,10 @@ function gotNumerIdexArray(len: number) {
     }
     return outArr
 }
-function getValue(value) {
+function getValue(value?: number) {
     return Number(value) * 100 || 0;
 }
-function getBackReallyNumber(value) {
+function getBackReallyNumber(value?: number) {
     return Number(value) / 100 || 0;
 }
 
@@ -37,13 +39,13 @@ function arrAddItemBefore<T extends Record<string, unknown>>(
     outItem?: keyof T
 ) {
     const arrLen = arr?.length
-    if (!arrLen || !addItem || !outItem) return '';
+    if (!arrLen || !addItem || !outItem) return [];
     const dataBack: T[] = []
     let total = 0
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < arrLen; i++) {
         const tempItem = arr[i];
-        const tempNumber = getValue(tempItem?.[addItem]) + getValue(total)
+        const tempNumber = getValue(tempItem?.[addItem] as number) + getValue(total)
         total = getBackReallyNumber(tempNumber)
         dataBack.push({
             ...tempItem,
@@ -54,14 +56,13 @@ function arrAddItemBefore<T extends Record<string, unknown>>(
     return dataBack
 }
 
-
+type AmountBill = API.BillType & { amountBefore?: number }
 export default (): React.ReactNode => {
     const { id } = useParams<{ id?: string }>()
-    const [dataCome, setDataCome] = useState<API.BillType & {
-        amountBefore: number
-    }[]>()
+    const [dataCome, setDataCome] = useState<AmountBill[]>()
     const pngNodeRef = useRef<HTMLDivElement>(null)
     const [imageSrc, setImageSrc] = useState<string>()
+    const [ifShowDone, setIfShowDone] = useState<boolean>(false)
 
     const gotDataCome = useCallback(async (idGot) => {
         const dataFi = await findBillData({
@@ -69,8 +70,7 @@ export default (): React.ReactNode => {
             page: 1,
             customer: idGot
         });
-        // amountBefore
-        const finaArr = arrAddItemBefore(dataFi?.data, 'amount', 'amountBefore')
+        const finaArr = arrAddItemBefore<AmountBill>(dataFi?.data, 'amount', 'amountBefore')
         setDataCome(finaArr)
     }, [])
 
@@ -109,11 +109,26 @@ export default (): React.ReactNode => {
     return (
         <div>
             <PageContainer>
-                <Card extra={[<Button
-                    type='primary'
-                    onClick={() => {
-                        downLoadPng()
-                    }}>保存图片</Button>]}>
+                <Card extra={[
+                    <PermissionCN permissionKey="bill:update">
+                        <Button
+                            type='primary'
+                            style={{
+                                marginRight: '20px'
+                            }}
+                            onClick={() => {
+                                setIfShowDone((v) => !v)
+                            }}>
+                            {ifShowDone ? '隐藏' : '显示'}收款按钮
+                        </Button>
+                    </PermissionCN>,
+                    <Button
+                        type='primary'
+                        onClick={() => {
+                            downLoadPng()
+                        }}>保存图片
+                    </Button>
+                ]}>
                     <div style={{
                         margin: '0 auto',
                         maxWidth: '900px',
@@ -148,7 +163,7 @@ export default (): React.ReactNode => {
                                     valueType: 'indexBorder',
                                 },
                                 {
-                                    title: '日期',
+                                    title: '送达日期',
                                     dataIndex: 'startTime',
                                     render: (_, record) => (format(new Date(record.startTime!), 'yyyy-MM-dd ')),
                                 },
@@ -159,6 +174,35 @@ export default (): React.ReactNode => {
                                     title: '累计金额',
                                     dataIndex: 'amountBefore',
                                     render: (_, record) => <Typography.Text type="danger">* {record?.amountBefore}</Typography.Text>
+                                }, {
+                                    title: '操作',
+                                    dataIndex: 'action',
+                                    hideInTable: !ifShowDone,
+                                    render: (_, record) => (
+                                        <PermissionCN permissionKey="bill:update">
+                                            <Popconfirm
+                                                title="确定该单已收款吗？该操作会删除该条数据"
+                                                onConfirm={async () => {
+                                                    if (record?._id) {
+                                                        const result = await updateBillData(record._id, {});
+                                                        const time = (format(new Date(record.startTime!), 'yyyy-MM-dd '))
+                                                        if (!(result as API.ErrorDe)?.error) {
+                                                            gotDataCome(id)
+                                                            message.success(`${time}已收款成功`);
+                                                        } else {
+                                                            message.error(`${time}已收款失败`);
+                                                        }
+                                                    }
+                                                }}
+                                                onCancel={() => { }}
+                                                okText="确定"
+                                                cancelText="否"
+                                            >
+                                                <Button type="primary" >
+                                                    已收款
+                                                </Button>
+                                            </Popconfirm >
+                                        </PermissionCN>)
                                 }
                             ]}
                             style={{
