@@ -12,12 +12,16 @@ export const tagLabel: API.TagLable = {
         label: '单据部门',
     },
     'STAFF': {
-        color: '默认业务员',
-        label: '操作人',
+        color: 'deepSkyBlue',
+        label: '默认业务员',
     }, 'BELONG': {
         color: 'orange',
         label: '所属店铺',
     },
+    'WAREHOUSE': {
+        color: 'lightgreen',
+        label: '仓库',
+    }
 
 }
 export const labelItem: {
@@ -35,11 +39,14 @@ export const labelItem: {
             label: '默认业务员',
             value: 'STAFF',
         }, {
+            label: '单据经手人',
+            value: 'DISTRICT',
+        }, {
             label: '所属店铺',
             value: 'BELONG',
         }, {
-            label: '单据经手人',
-            value: 'DISTRICT',
+            label: '仓库',
+            value: 'WAREHOUSE',
         },
     ]
 // '3_OWE' | '1_SERIOUS_DELAY' | '2_HIGH_DELAY'

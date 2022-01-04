@@ -64,7 +64,7 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
             label: 'DISTRICT'
         })
         return labelValueEnd(dataCome?.data || [], 'deName', 'code')
-    }, 1000)
+    }, 500)
 
     const afterDeliveryDebouce = asyncDebounce(async (name) => {
         const dataCome = await findDepartmentData({
@@ -74,7 +74,7 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
             label: 'DEPARTENT'
         })
         return labelValueEnd(dataCome?.data || [], 'deName', 'code')
-    }, 1000)
+    }, 500)
 
     const afterCoumDebouce = asyncDebounce(async (name) => {
         const dataCome = await findCustomerData({
@@ -83,7 +83,7 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
             limit: 20
         })
         return labelValueEnd(dataCome?.data || [], 'name', 'code')
-    }, 1000)
+    }, 500)
 
     const columns: ProColumns<API.BillType>[] = [
         {
@@ -114,8 +114,7 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
             title: '送达日期',
             dataIndex: 'startTime',
             render: (_, record) => (format(new Date(record.startTime!), 'yyyy-MM-dd ')),
-            valueType: "dateRange"
-
+            valueType: "dateRange",
         },
         {
             title: '经手人',
@@ -152,7 +151,7 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
             render: (_, record) => (<Tag color={stateColor[record.state!].color}>{stateColor[record.state!].label}</Tag>),
             valueType: "radioButton",
             colSize: 2,
-            tooltip: '当选择了【送达日期】后，该选项无效',
+            // tooltip: '当选择了【送达日期】后，该选项无效',
             request: async () => stateSelect
         },
         {
@@ -211,7 +210,7 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
         rowKey="_id"
         search={{
             collapsed: false,
-            collapseRender:false,
+            collapseRender: false,
         }}
         request={tableChange}
         options={false}

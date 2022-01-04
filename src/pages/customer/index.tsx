@@ -22,7 +22,7 @@ const afterDebouce = asyncDebounce(async (name) => {
         label: 'STAFF'
     })
     return labelValueEnd(dataCome?.data || [], 'deName', 'code')
-}, 1000)
+}, 500)
 
 const CustomerList: React.FC = () => {
 
@@ -80,7 +80,12 @@ const CustomerList: React.FC = () => {
             }, {
                 title: '待收款',
                 dataIndex: 'oweTotal',
-                valueType: 'text',
+                hideInForm: true,
+                hideInSearch: true,
+            }, {
+                title: '手机号',
+                dataIndex: 'phone',
+                hideInTable: true,
             },
             // {
             //     title: '操作',

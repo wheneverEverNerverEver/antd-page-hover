@@ -7,8 +7,7 @@ import DepartmentSelect from './departmentSelect';
 import { DownloadComponent } from '@/components/DownloadUrl';
 
 export default (): React.ReactNode => {
-  const [submitResult, recordSubmitResult] = useState<API.TransformBack | undefined
-  >();
+  const [submitResult, recordSubmitResult] = useState<API.TransformBack | undefined>();
 
   return (
     <PageContainer>

@@ -7,6 +7,7 @@ import { PageContent } from '@/components/PageContent';
 import DepartmentSelect from '../transform/departmentSelect';
 import { DownloadComponent } from '@/components/DownloadUrl';
 import { PageContainer } from '@ant-design/pro-layout';
+import { Link } from 'umi';
 
 const CustomerTransform: React.FC = () => {
     const [submitResult, setSubmitResult] = useState<{ fileName?: string, errorArr?: API.CustomerType[] }>()
@@ -96,7 +97,12 @@ const CustomerTransform: React.FC = () => {
                                 columns={[
                                     { dataIndex: 'code', title: '商家编码' },
                                     { dataIndex: 'name', title: '门店名称' },
-                                    { dataIndex: 'phone', title: '电话号码' },
+                                    {
+                                        dataIndex: 'phone',
+                                        title: '电话号码',
+                                        render: (_, record) => (<Link to={`/customer/same/${record?.phone}`}>{record.phone}</Link>)
+
+                                    },
                                 ]}
                             />
                         </Card>

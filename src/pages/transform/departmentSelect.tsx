@@ -19,7 +19,7 @@ export function useFindDepartment(type?: API.LabelType) {
 
         return () => { }
 
-    }, []);
+    }, [type]);
     return depart
 }
 

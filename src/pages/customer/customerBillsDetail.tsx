@@ -10,6 +10,8 @@ import ProTable from '@ant-design/pro-table';
 import html2canvas from 'html2canvas'
 import CoverImage from './coverImage';
 import { PermissionCN } from '@/components/PermissionCN';
+import { history } from 'umi'
+import { PageContent } from '@/components/PageContent';
 
 
 const { Panel } = Collapse;
@@ -107,7 +109,7 @@ export default (): React.ReactNode => {
 
 
     return (
-        <div>
+        <PageContent>
             <PageContainer>
                 <Card extra={[
                     <PermissionCN permissionKey="bill:update">
@@ -123,11 +125,19 @@ export default (): React.ReactNode => {
                         </Button>
                     </PermissionCN>,
                     <Button
+                        style={{
+                            marginRight: '20px'
+                        }}
                         type='primary'
                         onClick={() => {
                             downLoadPng()
                         }}>保存图片
-                    </Button>
+                    </Button>,
+                    <Button
+                        onClick={() => {
+                            history.goBack();
+                        }}>返回
+                    </Button>,
                 ]}>
                     <div style={{
                         margin: '0 auto',
@@ -264,7 +274,7 @@ export default (): React.ReactNode => {
                     setImageSrc(undefined)
                 }} />}
             </PageContainer >
-        </div>
+        </PageContent>
     );
 };
 

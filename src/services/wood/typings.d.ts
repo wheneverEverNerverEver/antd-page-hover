@@ -34,6 +34,7 @@ declare namespace API {
     productToday?: API.ProductListItem[];
     newConstomes?: Array<{ id: string, name: string, phone: string }>,
     productNew?: Array<{ code: string, name: string }>
+    samePhone?: Array<{ phone: string }>
   };
 
   type DepartmentItem = {
@@ -99,6 +100,8 @@ declare namespace API {
     deName?: string
     name?: string
     manager?: string
+    phone?: string
+    sort?: string
   };
   type BaseQuery = {
     limit?: number;
@@ -153,7 +156,7 @@ declare namespace API {
     type?: NoticeIconItemType;
   };
 
-  type LabelType = 'DEPARTENT' | 'DISTRICT' | 'CLASS' | 'STAFF' | 'BELONG'
+  type LabelType = 'DEPARTENT' | 'DISTRICT' | 'CLASS' | 'STAFF' | 'BELONG' | 'WAREHOUSE'
   type TagLable = Record<LabelType, { color: string, label: string }>
   type ColorAndLabel<T> = Record<T, { color: string, label: string }>
   type ValueAndLabel<T> = Array<{ value: T, label: string }>
@@ -168,6 +171,8 @@ declare namespace API {
     manager?: CodeNameType
     delivery?: CodeNameType
     oweTotal?: number,
+    trUsed?: number,
+    phone?: number
     _id?: string
   }
 
@@ -233,6 +238,16 @@ declare namespace API {
     _id?: string,
     pageCodeArr?: PageType[]
   }
-
+  type ProductyzType = {
+    code?: string,
+    barCode?: string,
+    name?: string,
+    _id?: string,
+  }
+  type ProductYzTransform = {
+    warehouse?: string,
+    department?: string,
+    belong?: string,
+  }
 }
 

@@ -38,6 +38,7 @@ export type PermissionKey =
     'product:delete' |
     'product:update' |
     'product:import' |
+    'product:importyz' |
     'department:import' |
     'department:delete' |
     'customer:import' |

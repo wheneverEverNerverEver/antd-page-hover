@@ -18,6 +18,13 @@
       },
     ],
   },
+  /** 首页   */
+  {
+    path: '/home',
+    name: 'home',
+    hideInMenu: true,
+    component: './index',
+  },
   /** 订单转换   */
   {
     path: '/transform',
@@ -28,10 +35,8 @@
       path: '/transform/shixiang',
       component: './transform',
     }, {
-      /**未完善，先隐藏 */
       name: 'youzan',
       path: '/transform/youzan',
-      hideInMenu: true,
       component: './transform/youzanIndex',
     }]
   },
@@ -60,16 +65,31 @@
         path: '/customer/details/:id',
         component: './customer/customerBillsDetail',
         hideInMenu: true,
-        parentKeys: ['/customer/list', '/customer/transform'],
+        parentKeys: ['/customer'],
+      }, {
+        name: 'onePhone',
+        path: '/customer/same/:phone',
+        component: './customer/customerPhonesDetail',
+        hideInMenu: true,
+        parentKeys: ['/customer'],
       },
     ],
   },
   /** 商品   */
   {
-    name: 'admin',
+    name: 'products',
     icon: 'table',
-    path: '/list',
-    component: './TableList',
+    path: '/products',
+    routes: [
+      {
+        path: '/products/listSx',
+        name: 'sx',
+        component: './products/TableList',
+      }, {
+        path: '/products/listYz',
+        name: 'yz',
+        component: './products/TableListYZ',
+      },]
   },
   /** 分类   */
   {
@@ -102,7 +122,7 @@
   },
   {
     path: '/',
-    redirect: '/transform/shixiang',
+    redirect: '/home',
   },
   {
     component: './404',

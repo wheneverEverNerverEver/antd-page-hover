@@ -31,10 +31,6 @@ const ProjectItems: React.FC = () => {
           });
         }}
 
-        search={{
-          span: 12,
-          labelWidth: 'auto',
-        }}
 
         columns={[
           { dataIndex: 'code', title: '编码', hideInSearch: true },
@@ -47,6 +43,7 @@ const ProjectItems: React.FC = () => {
               return (<Tag color={colorAndLable?.color}>{colorAndLable?.label}</Tag>)
             },
             valueType: 'radioButton',
+            colSize: 2,
             request: async () => (radioOption)
           },
           {

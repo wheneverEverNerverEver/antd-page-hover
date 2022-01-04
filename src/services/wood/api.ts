@@ -128,11 +128,22 @@ export async function findUser(params: API.UserItem, options?: Record<string, an
   });
 }
 
-/** 商品上传接口 */
+/** 食享商品上传接口 */
 export async function importProductData(body: { file: any }, options?: Record<string, any>) {
   const formData = new FormData();
   formData.append('fileGuanjia', body.file);
   return request<API.ErrorDe>('/api/product/import', {
+    method: 'POST',
+    data: formData,
+    requestType: 'form',
+    ...(options || {}),
+  });
+}
+/** 有赞商品上传接口 */
+export async function importProductYZData(body: { file: any }, options?: Record<string, any>) {
+  const formData = new FormData();
+  formData.append('fileGuanjia', body.file);
+  return request<API.ErrorDe>('/api/product/importyz', {
     method: 'POST',
     data: formData,
     requestType: 'form',
@@ -160,9 +171,17 @@ export async function updateProductData(params: API.ProductListItem) {
     data: params,
   });
 }
-/** 查询商品 */
+/** 查询食享商品 */
 export async function findProductData(params: API.QueryProduct, options?: Record<string, any>) {
   return request<Partial<RequestData<API.ProductListItem>>>('/api/product/find', {
+    method: 'GET',
+    params,
+    ...(options || {}),
+  });
+}
+/** 查询有赞商品 */
+export async function findProductyzData(params: API.ProductyzType & API.BaseQuery, options?: Record<string, any>) {
+  return request<Partial<RequestData<API.ProductListItem>>>('/api/product/findyz', {
     method: 'GET',
     params,
     ...(options || {}),
@@ -176,7 +195,7 @@ export async function downloadProductData(params: API.QueryProduct, options?: Re
     ...(options || {}),
   });
 }
-/** 转货Excel表格数据 */
+/** 机遇食享转货Excel表格数据 */
 export async function transformProductData(
   body: { file: any },
   depSelect: string,
@@ -189,6 +208,25 @@ export async function transformProductData(
     data: formData,
     params: {
       dep: depSelect,
+    },
+    requestType: 'form',
+    ...(options || {}),
+  });
+}
+/** 基于有赞转货Excel表格数据 */
+export async function transformProductYZData(
+  body: { fileGoods: any, fileOrders: any },
+  baseInfo: API.ProductYzTransform,
+  options?: Record<string, any>,
+) {
+  const formData = new FormData();
+  formData.append('fileOrders', body.fileOrders);
+  formData.append('fileGoods', body.fileGoods);
+  return request<API.TransformBack | API.ErrorDe>('/api/product/transformExcelyz', {
+    method: 'POST',
+    data: formData,
+    params: {
+      ...baseInfo,
     },
     requestType: 'form',
     ...(options || {}),

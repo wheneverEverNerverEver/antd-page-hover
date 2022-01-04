@@ -50,6 +50,7 @@ const ImportData: React.FC<{ refetch?: () => void }> = (props) => {
         label="导入文件是属于："
         placeholder="覆盖式导入，不在原基础上新增"
         initialValue='DEPARTENT'
+        radioType="button"
         options={labelItem}
         rules={[
           {
