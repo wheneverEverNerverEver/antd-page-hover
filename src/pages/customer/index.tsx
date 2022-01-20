@@ -38,7 +38,7 @@ const CustomerList: React.FC = () => {
         }
         return [
             {
-                title: '用户ID',
+                title: '用户编号',
                 dataIndex: 'code',
                 valueType: 'text',
             },
@@ -47,6 +47,11 @@ const CustomerList: React.FC = () => {
                 dataIndex: 'name',
                 valueType: 'text',
                 render: (_, record) => (<Link to={`/customer/details/${record?.code}`}>{record.name}</Link>)
+            }, {
+                title: '待收款',
+                dataIndex: 'oweTotal',
+                hideInForm: true,
+                hideInSearch: true,
             }, {
                 title: '经手人',
                 dataIndex: 'manager',
@@ -77,11 +82,6 @@ const CustomerList: React.FC = () => {
                 render: (_, record) => {
                     return <Tag color={"orange"}>{record?.district?.deName}</Tag>
                 }
-            }, {
-                title: '待收款',
-                dataIndex: 'oweTotal',
-                hideInForm: true,
-                hideInSearch: true,
             }, {
                 title: '手机号',
                 dataIndex: 'phone',

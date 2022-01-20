@@ -94,9 +94,13 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
                     marginBottom: 0
                 }}>{record?.orderCode?.substring(0, 4)}</Paragraph>
             },
-            valueType: 'text',
-        },
-        {
+            hideInSearch: true,
+        }, {
+            title: '送达日期',
+            dataIndex: 'startTime',
+            render: (_, record) => (format(new Date(record.startTime!), 'yyyy-MM-dd ')),
+            valueType: "dateRange",
+        }, {
             title: '客户名称',
             dataIndex: 'customer',
             render: (_, record) => (
@@ -111,11 +115,19 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
                 showSearch: true,
             }
         }, {
-            title: '送达日期',
-            dataIndex: 'startTime',
-            render: (_, record) => (format(new Date(record.startTime!), 'yyyy-MM-dd ')),
-            valueType: "dateRange",
+            title: '金额',
+            dataIndex: 'amount',
+        }, {
+            title: '状态',
+            dataIndex: 'state',
+            render: (_, record) => (<Tag color={stateColor[record.state!].color}>{stateColor[record.state!].label}</Tag>),
+            valueType: "radioButton",
+            // colSize: 2,
+            // tooltip: '当选择了【送达日期】后，该选项无效',
+            request: async () => stateSelect,
+            hideInSearch: true,
         },
+
         {
             title: '经手人',
             dataIndex: 'manager',
@@ -140,19 +152,6 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
                 labelInValue: true,
                 showSearch: true,
             }
-        },
-        {
-            title: '金额',
-            dataIndex: 'amount',
-        },
-        {
-            title: '状态',
-            dataIndex: 'state',
-            render: (_, record) => (<Tag color={stateColor[record.state!].color}>{stateColor[record.state!].label}</Tag>),
-            valueType: "radioButton",
-            colSize: 2,
-            // tooltip: '当选择了【送达日期】后，该选项无效',
-            request: async () => stateSelect
         },
         {
             title: '操作',
