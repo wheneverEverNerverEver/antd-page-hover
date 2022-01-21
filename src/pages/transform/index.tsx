@@ -83,7 +83,7 @@ export default (): React.ReactNode => {
       </Card>
       {
         (submitResult?.newConstomes || []).length > 0 && (
-          <Card title={<Typography.Title level={4} type="danger">没有三方用户ID的客户（需新增）!!</Typography.Title>}>
+          <Card title={<Typography.Title level={4} type="danger">需新增客户!!</Typography.Title>}>
             <Table
               dataSource={submitResult?.newConstomes || []}
               rowKey="id"
@@ -99,7 +99,7 @@ export default (): React.ReactNode => {
 
       {
         (submitResult?.productNew || []).length > 0 && (
-          <Card title={<Typography.Title type="danger" level={4} >尚未同步的商品!!</Typography.Title>}>
+          <Card title={<Typography.Title type="danger" level={4} >商品未同步!!</Typography.Title>}>
             <Table
               dataSource={submitResult?.productNew || []}
               rowKey="code"
