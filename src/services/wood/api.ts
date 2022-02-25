@@ -3,6 +3,7 @@ import type { RequestData } from '@ant-design/pro-table';
 import type { DataNode } from 'antd/lib/tree';
 
 import request from 'umi-request';
+import { history } from 'umi';
 
 export function gotToken() {
   return localStorage.getItem('USER_TOKEN');
@@ -43,15 +44,15 @@ request.interceptors.response.use(async (response, options) => {
   const { url, headers } = response;
   const tokenGot = headers?.get('token');
   const isLogin = /\/api\/login\/account/.test(url)
-  const data = await response.clone().json();
+
   const tokenGotF = localStorage.getItem('USER_TOKEN')
   if (isLogin && tokenGot) {
     localStorage.setItem('USER_TOKEN', tokenGot);
   }
 
-  if (data && data === 'NEED LOGIN' || `${response.status}` === '211' || (!isLogin && !tokenGotF)) {
-    window.open(`${window.location.origin}/user/login`, '_self');
+  if (`${response.status}` === '403' || (!isLogin && !tokenGotF)) {
     localStorage.removeItem('USER_TOKEN');
+    history.push(`${window.location.origin}/user/login`, '_self');
     throw Error('请登录后进行操作');
   }
   if (/\/api\/logout\/account/.test(url)) {
