@@ -16,6 +16,7 @@ product:import	导入商品
 
 department:import	导入分类
 department:delete	删除分类
+department:showIf   是否在菜单中显示
 
 customer:import	导入客户
 customer:delete	删除客户
@@ -29,6 +30,7 @@ role:authImport	权限文件导入
 role:delete	删除角色
 role:update	编辑角色
 role:add	新增角色
+  
  */
 export type PermissionKey =
     'account:add' |
@@ -50,7 +52,8 @@ export type PermissionKey =
     'role:authImport' |
     'role:delete' |
     'role:update' |
-    'role:add'
+    'role:add' |
+    'department:showIf'
 
 export function PermissionCN(props: PropsWithChildren<{ permissionKey: PermissionKey }>) {
     const { permissionKey, children } = props

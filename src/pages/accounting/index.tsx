@@ -2,7 +2,7 @@
 import type { PaginationProps } from 'antd';
 import { Tooltip } from 'antd';
 import { message, Popconfirm, Button, Tag } from 'antd';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
@@ -17,6 +17,7 @@ import { FileSearchOutlined } from '@ant-design/icons';
 import CoverImage from '../customer/coverImage';
 import { Link } from 'react-router-dom';
 import { PermissionCN } from '@/components/PermissionCN';
+import { useParams } from 'umi';
 
 const { Paragraph } = Typography;
 
@@ -38,6 +39,7 @@ export function labelValueEnd<T extends Record<string, any>>(arr: T[], nameLabel
 export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
     const [showImage, setShowImage] = useState<string>()
     const tableRef = useRef<ActionType>()
+    const { accounting } = useParams<{ accounting?: string }>()
 
     const tableChange = useCallback(async (pagination: API.QueryBillObj & PaginationProps, sort, filter) => {
         const { pageSize, current, customer, manager, startTime, delivery, ...rest } = pagination;
@@ -85,124 +87,128 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
         return labelValueEnd(dataCome?.data || [], 'name', 'code')
     }, 500)
 
-    const columns: ProColumns<API.BillType>[] = [
-        {
-            title: '订单编号',
-            dataIndex: 'orderCode',
-            render: (_, record) => {
-                return <Paragraph copyable={{ text: record?.orderCode }} style={{
-                    marginBottom: 0
-                }}>{record?.orderCode?.substring(0, 4)}</Paragraph>
+    const columns = useMemo<ProColumns<API.BillType>[]>(() => {
+        const data: ProColumns<API.BillType>[] = [
+            {
+                title: '订单编号',
+                dataIndex: 'orderCode',
+                render: (_, record) => {
+                    return <Paragraph copyable={{ text: record?.orderCode }} style={{
+                        marginBottom: 0
+                    }}>{record?.orderCode?.substring(0, 4)}</Paragraph>
+                },
+            }, {
+                title: '送达日期',
+                dataIndex: 'startTime',
+                render: (_, record) => (format(new Date(record.startTime!), 'yyyy-MM-dd ')),
+                valueType: "dateRange",
+                colSize: 2,
+            }, {
+                title: '客户名称',
+                dataIndex: 'customer',
+                render: (_, record) => (
+                    <Link to={`/customer/details/${record?.customer?.code}`}>{record.customer?.name}</Link>
+                ),
+                valueType: 'select',
+                colSize: 2,
+                request: afterCoumDebouce as any,
+                fieldProps: {
+                    onSearch: afterCoumDebouce as any,
+                    labelInValue: true,
+                    showSearch: true,
+                }
+            }, {
+                title: '金额',
+                dataIndex: 'amount',
+            }, {
+                title: '状态',
+                dataIndex: 'state',
+                render: (_, record) => (<Tag color={stateColor[record.state!].color}>{stateColor[record.state!].label}</Tag>),
+                valueType: "radioButton",
+                // colSize: 2,
+                // tooltip: '当选择了【送达日期】后，该选项无效',
+                request: async () => stateSelect,
+                hideInSearch: true,
             },
-            hideInSearch: true,
-        }, {
-            title: '送达日期',
-            dataIndex: 'startTime',
-            render: (_, record) => (format(new Date(record.startTime!), 'yyyy-MM-dd ')),
-            valueType: "dateRange",
-        }, {
-            title: '客户名称',
-            dataIndex: 'customer',
-            render: (_, record) => (
-                <Link to={`/customer/details/${record?.customer?.code}`}>{record.customer?.name}</Link>
-            ),
-            valueType: 'select',
-            colSize: 2,
-            request: afterCoumDebouce as any,
-            fieldProps: {
-                onSearch: afterCoumDebouce as any,
-                labelInValue: true,
-                showSearch: true,
-            }
-        }, {
-            title: '金额',
-            dataIndex: 'amount',
-        }, {
-            title: '状态',
-            dataIndex: 'state',
-            render: (_, record) => (<Tag color={stateColor[record.state!].color}>{stateColor[record.state!].label}</Tag>),
-            valueType: "radioButton",
-            // colSize: 2,
-            // tooltip: '当选择了【送达日期】后，该选项无效',
-            request: async () => stateSelect,
-            hideInSearch: true,
-        },
 
-        {
-            title: '经手人',
-            dataIndex: 'manager',
-            render: (_, record) => (record.manager?.deName),
-            valueType: 'select',
-            request: afterManageDebouce as any,
-            fieldProps: {
-                onSearch: afterManageDebouce as any,
-                labelInValue: true,
-                showSearch: true,
-            }
-        }, {
-            title: '配送人',
-            dataIndex: 'delivery',
-            render: (_, record) => {
-                return record?.delivery?.deName
+            {
+                title: '经手人',
+                dataIndex: 'manager',
+                render: (_, record) => (record.manager?.deName),
+                valueType: 'select',
+                request: afterManageDebouce as any,
+                fieldProps: {
+                    onSearch: afterManageDebouce as any,
+                    labelInValue: true,
+                    showSearch: true,
+                },
+                hideInSearch: accounting !== 'all'
+            }, {
+                title: '配送人',
+                dataIndex: 'delivery',
+                render: (_, record) => {
+                    return record?.delivery?.deName
+                },
+                valueType: 'select',
+                request: afterDeliveryDebouce as any,
+                fieldProps: {
+                    onSearch: afterDeliveryDebouce as any,
+                    labelInValue: true,
+                    showSearch: true,
+                }
             },
-            valueType: 'select',
-            request: afterDeliveryDebouce as any,
-            fieldProps: {
-                onSearch: afterDeliveryDebouce as any,
-                labelInValue: true,
-                showSearch: true,
-            }
-        },
-        {
-            title: '操作',
-            dataIndex: 'action',
-            valueType: 'option',
-            render: (_, record) => [
-                <PermissionCN permissionKey="bill:update">
-                    <Popconfirm
-                        title="确定该单已收款吗？该操作会删除该条数据"
-                        onConfirm={async () => {
-                            if (record?._id) {
-                                const result = await updateBillData(record._id, {});
+            {
+                title: '操作',
+                dataIndex: 'action',
+                valueType: 'option',
+                render: (_, record) => [
+                    <PermissionCN permissionKey="bill:update" key="yishoukuan">
+                        <Popconfirm
+                            title="确定该单已收款吗？该操作会删除该条数据"
+                            onConfirm={async () => {
+                                if (record?._id) {
+                                    const result = await updateBillData(record._id, {});
 
-                                if (!(result as API.ErrorDe)?.error) {
-                                    tableRef?.current?.reloadAndRest?.()
-                                    message.success(`${record.customer?.name}已收款成功`);
-                                } else {
-                                    message.error(`${record.customer?.name}已收款失败`);
+                                    if (!(result as API.ErrorDe)?.error) {
+                                        tableRef?.current?.reloadAndRest?.()
+                                        message.success(`${record.customer?.name}已收款成功`);
+                                    } else {
+                                        message.error(`${record.customer?.name}已收款失败`);
+                                    }
                                 }
-                            }
-                        }}
-                        onCancel={() => { }}
-                        okText="确定"
-                        cancelText="否"
-                    >
+                            }}
+                            onCancel={() => { }}
+                            okText="确定"
+                            cancelText="否"
+                        >
 
 
-                        <Button type="primary" >
-                            已收款
-                        </Button>
-                    </Popconfirm >
-                </PermissionCN>,
-                <PermissionCN permissionKey="bill:image">
-                    <ImportImg refetch={() => {
-                        tableRef?.current?.reloadAndRest?.()
-                    }} orderCode={record?.orderCode}></ImportImg>
-                </PermissionCN>,
-                <Tooltip title={record?.imgUploader ? `上传人:${record?.imgUploader || ''}` : '等待上传'}>
-                    <Button
-                        type='primary'
-                        className='pink-btn'
-                        disabled={!record?.img}
-                        onClick={() => {
-                            setShowImage(record?.img)
-                        }}
-                    ><FileSearchOutlined /></Button>
-                </Tooltip>
+                            <Button type="primary" >
+                                已收款
+                            </Button>
+                        </Popconfirm >
+                    </PermissionCN>,
+                    <PermissionCN permissionKey="bill:image" key="shangchuantupian">
+                        <ImportImg refetch={() => {
+                            tableRef?.current?.reloadAndRest?.()
+                        }} orderCode={record?.orderCode}></ImportImg>
+                    </PermissionCN>,
+                    <Tooltip title={record?.imgUploader ? `上传人:${record?.imgUploader || ''}` : '等待上传'} key="chakan">
+                        <Button
+                            type='primary'
+                            className='pink-btn'
+                            disabled={!record?.img}
+                            onClick={() => {
+                                setShowImage(record?.img)
+                            }}
+                        ><FileSearchOutlined /></Button>
+                    </Tooltip>
 
-            ],
-        },
-    ];
+                ],
+            },
+        ];
+        return data
+    }, [accounting, afterCoumDebouce, afterDeliveryDebouce, afterManageDebouce]);
 
     return (<><ProTable<API.BillType, Record<any, string>>
         actionRef={tableRef}
@@ -211,15 +217,16 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
             collapsed: false,
             collapseRender: false,
         }}
+        params={{ accounting: accounting! }}
         request={tableChange}
         options={false}
         toolBarRender={() => [
-            <PermissionCN permissionKey="bill:import">
+            <PermissionCN permissionKey="bill:import" key="daoru">
                 <ImportData refetch={() => {
                     tableRef?.current?.reloadAndRest?.()
                 }}></ImportData>
             </PermissionCN>,
-            <a style={{ display: 'inline-block' }}
+            <a style={{ display: 'inline-block' }} key="daochu"
                 download
                 href="/api/bill/download">
                 <Button>导出全部单据</Button>

@@ -267,6 +267,19 @@ export async function deleteDepartmentData(params: { id?: string }) {
     params,
   });
 }
+export async function ifShowDepartmentData(params: { id?: string, showIf?: boolean }) {
+  return request<API.ErrorDe>('/api/department/showIfDic', {
+    method: 'GET',
+    params,
+  });
+}
+
+export async function findShowDepartmentData() {
+  return request<Partial<RequestData<API.DepartmentItem>>>('/api/department/findshowIfDic', {
+    method: 'GET',
+  });
+}
+
 // /api/department/import
 
 /** ------------------->>>>>>>>>>>>>>  */

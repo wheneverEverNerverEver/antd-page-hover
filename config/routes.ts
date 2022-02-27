@@ -52,9 +52,16 @@
         component: './customer',
       },
       {
+        name: 'choiceManager',
+        path: '/customer/choiceManager',
+        component: './accounting/choiceManager',
+
+      }, {
         name: 'accounting',
-        path: '/customer/accounting',
+        path: '/customer/choiceManager/:accounting',
         component: './accounting',
+        hideInMenu: true,
+        parentKeys: ['/customer/choiceManager'],
       }, {
         name: 'transform',
         path: '/customer/transform',

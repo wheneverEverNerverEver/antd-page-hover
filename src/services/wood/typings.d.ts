@@ -41,6 +41,8 @@ declare namespace API {
     deName?: string;
     code?: string;
     _id?: string;
+    showInMenu?: boolean
+    count?: number
     label?: LabelType
   };
 
