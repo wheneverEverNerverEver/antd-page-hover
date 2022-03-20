@@ -251,5 +251,38 @@ declare namespace API {
     department?: string,
     belong?: string,
   }
+  type AftermarketProcess = 'WAITING' | 'DONE'
+  type AftermarketReason = 'NEEDREFUND' | 'NEEDRETURNREFUNF'
+  type AftermarketType = {
+    _id?: string,
+    startTime?: string,
+    customer?: string,
+    endTime?: string,
+    state?: AftermarketProcess, /** 处理状态 */
+    reason?: string, /** 售后原因 */
+    orderCode?: string, /** 订单编号 */
+    handler?: string, /** 处理人ID*/
+    delivery?: string, /** 售后配送员*/
+    imgFromCus?: string, /** 售后截图*/
+    imgFromWebHref?: string, /** 使用超链接*/
+    imgRefund?: string, /** 售后退款截图*/
+    reasonType?: AftermarketReason
+  }
+
+  type AftermarketDetailType = {
+    _id?: string,
+    startTime?: string,
+    customer?: CustomerType,
+    endTime?: string,
+    state?: AftermarketProcess, /** 处理状态 */
+    reason?: string, /** 售后原因 */
+    orderCode?: string, /** 订单编号 */
+    handler?: UserItem, /** 处理人ID*/
+    delivery?: DepartmentItem, /** 售后配送员*/
+    imgFromCus?: string, /** 售后截图*/
+    imgFromWebHref?: string, /** 使用超链接*/
+    imgRefund?: string, /** 售后退款截图*/
+    reasonType?: AftermarketReason
+  }
 }
 

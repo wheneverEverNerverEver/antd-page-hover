@@ -3,7 +3,7 @@ import { findShowDepartmentData } from '@/services/wood/api';
 import { PageContent, } from "@/components/PageContent"
 import { useEffect, useState } from "react"
 import { Link } from "umi";
-import bgSrc from '@/../public/bg.png'
+// import bgSrc from '@/../public/bg.png'
 
 const LiWithStyle: React.FC<{ code?: string, deName?: string, bold?: boolean, number?: number }> = (props) => {
     const { code, deName, bold, number } = props
@@ -61,10 +61,10 @@ const ChoiceManager: React.FC = () => {
             width: '100%',
             height: '100%',
         }}>
-            <img src={bgSrc} alt="bg" style={{
+            {/* <img src={bgSrc} alt="bg" style={{
                 position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%',
                 height: '100%',
-            }} />
+            }} /> */}
             <PageContent
                 style={{
                     background: 'transparent'

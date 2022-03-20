@@ -77,3 +77,25 @@ export const stateSelect: API.ValueAndLabel<API.StatusBill> = [
         value: '1_SERIOUS_DELAY',
     }
 ]
+
+
+export const aftermarketPro: API.ColorAndLabel<API.AftermarketProcess> = {
+    'WAITING': {
+        color: '#ec911f',
+        label: '处理中'
+    },
+    'DONE': {
+        color: 'rgb(195 189 38)',
+        label: '完成'
+    },
+}
+export const aftermarketRea: API.ColorAndLabel<API.AftermarketReason> = {
+    'NEEDREFUND': {
+        color: '#ec911f',
+        label: '只退款'
+    },
+    'NEEDRETURNREFUNF': {
+        color: 'rgb(195 189 38)',
+        label: '退货退款'
+    },
+}
