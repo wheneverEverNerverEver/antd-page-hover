@@ -12,6 +12,7 @@ export default {
   'menu.customer.accounting': '三七二两',
   'menu.customer.oneDetail': '名下详细',
   'menu.customer.onePhone': '同一号码',
+  'menu.customer.aftermarket': '售后记录',
   'menu.products': '商品相关',
   'menu.products.sx': '食享商品',
   'menu.products.yz': '有赞商品',

@@ -104,6 +104,7 @@ declare namespace API {
     manager?: string
     phone?: string
     sort?: string
+    code?: string
   };
   type BaseQuery = {
     limit?: number;
@@ -255,6 +256,7 @@ declare namespace API {
   type AftermarketReason = 'NEEDREFUND' | 'NEEDRETURNREFUNF'
   type AftermarketType = {
     _id?: string,
+    id?: string,
     startTime?: string,
     customer?: string,
     endTime?: string,
@@ -267,22 +269,27 @@ declare namespace API {
     imgFromWebHref?: string, /** 使用超链接*/
     imgRefund?: string, /** 售后退款截图*/
     reasonType?: AftermarketReason
+    imgFromCusUploader?: string, /** 售后截图上传人*/
+    imgRefundUploader?: string, /** 售后退款截图上传人*/
   }
 
   type AftermarketDetailType = {
     _id?: string,
+    id?: string,
     startTime?: string,
     customer?: CustomerType,
+    delivery?: DepartmentItem, /** 售后配送员*/
     endTime?: string,
     state?: AftermarketProcess, /** 处理状态 */
     reason?: string, /** 售后原因 */
     orderCode?: string, /** 订单编号 */
     handler?: UserItem, /** 处理人ID*/
-    delivery?: DepartmentItem, /** 售后配送员*/
     imgFromCus?: string, /** 售后截图*/
     imgFromWebHref?: string, /** 使用超链接*/
     imgRefund?: string, /** 售后退款截图*/
     reasonType?: AftermarketReason
+    imgFromCusUploader?: UserItem, /** 售后截图上传人*/
+    imgRefundUploader?: UserItem, /** 售后退款截图上传人*/
   }
 }
 

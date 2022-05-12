@@ -66,7 +66,7 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
             label: 'DISTRICT'
         })
         return labelValueEnd(dataCome?.data || [], 'deName', 'code')
-    }, 500)
+    }, 300)
 
     const afterDeliveryDebouce = asyncDebounce(async (name) => {
         const dataCome = await findDepartmentData({
@@ -76,7 +76,7 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
             label: 'DEPARTENT'
         })
         return labelValueEnd(dataCome?.data || [], 'deName', 'code')
-    }, 500)
+    }, 300)
 
     const afterCoumDebouce = asyncDebounce(async (name) => {
         const dataCome = await findCustomerData({

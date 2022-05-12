@@ -27,10 +27,10 @@ const AddAccount: React.FC<UpdateFormProps> = (props) => {
 
   return (
     <ModalForm<API.UserItem>
-    modalProps={{
-      destroyOnClose: true,
-      maskClosable: false
-    }}
+      modalProps={{
+        destroyOnClose: true,
+        maskClosable: false
+      }}
       title={`${typeDict[type]}用户`}
       formRef={formRef}
       initialValues={values}
@@ -90,7 +90,10 @@ const AddAccount: React.FC<UpdateFormProps> = (props) => {
           {
             required: true,
             message: '请输入登录账号！',
-          },
+          }, {
+            max: 30,
+            message: '请控制在30个字符以内'
+          }
         ]}
       />
       <ProFormText
@@ -100,7 +103,10 @@ const AddAccount: React.FC<UpdateFormProps> = (props) => {
           {
             required: true,
             message: '请输入用户名！',
-          },
+          }, {
+            max: 30,
+            message: '请控制在30个字符以内'
+          }
         ]}
       />
       {
@@ -113,7 +119,10 @@ const AddAccount: React.FC<UpdateFormProps> = (props) => {
                 {
                   required: true,
                   message: '请输入密码！',
-                },
+                }, {
+                  max: 30,
+                  message: '请控制在30个字符以内'
+                }
               ]}
             />
             <ProFormText.Password
@@ -123,7 +132,10 @@ const AddAccount: React.FC<UpdateFormProps> = (props) => {
                 {
                   required: true,
                   message: '请确认密码！',
-                },
+                }, {
+                  max: 30,
+                  message: '请控制在30个字符以内'
+                }
               ]}
             />
           </>

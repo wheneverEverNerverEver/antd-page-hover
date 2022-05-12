@@ -30,6 +30,12 @@ role:authImport	权限文件导入
 role:delete	删除角色
 role:update	编辑角色
 role:add	新增角色
+
+aftermarket:add	新增售后
+aftermarket:update	新增售后
+aftermarket:image	售后图片上传
+aftermarket:delete	新增售后
+
   
  */
 export type PermissionKey =
@@ -53,7 +59,11 @@ export type PermissionKey =
     'role:delete' |
     'role:update' |
     'role:add' |
-    'department:showIf'
+    'department:showIf' |
+    'aftermarket:add' |
+    'aftermarket:update' |
+    'aftermarket:delete' |
+    'aftermarket:image'
 
 export function PermissionCN(props: PropsWithChildren<{ permissionKey: PermissionKey }>) {
     const { permissionKey, children } = props

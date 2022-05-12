@@ -65,7 +65,13 @@
       }, {
         name: 'transform',
         path: '/customer/transform',
+        hideInMenu: true,
         component: './customer/transformCustomer',
+      },
+      {
+        name: 'aftermarket',
+        path: '/customer/aftermarket',
+        component: './customer/aftersale',
       },
       {
         name: 'oneDetail',

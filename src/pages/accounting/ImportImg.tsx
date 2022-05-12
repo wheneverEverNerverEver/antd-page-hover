@@ -53,7 +53,7 @@ const ImportImg: React.FC<{
         label="选择上传图片"
         placeholder="——"
         name="img"
-        accept="image/*"
+        accept="image/png,image/jpg,image/jpeg"
       />
 
     </ModalForm>

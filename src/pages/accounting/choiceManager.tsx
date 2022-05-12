@@ -67,14 +67,15 @@ const ChoiceManager: React.FC = () => {
             }} /> */}
             <PageContent
                 style={{
-                    background: 'transparent'
+                    // background: 'transparent'
                 }}
             >
                 <div
                     style={{
-                        width: '500px',
+                        width: '65%',
                         display: 'block',
-                        margin: '20px auto'
+                        margin: '20px auto',
+                        maxWidth: '800px',
                     }}
                 >
                     <Divider><Typography.Title level={3} type="warning">请选择要查看的经手人</Typography.Title></Divider>

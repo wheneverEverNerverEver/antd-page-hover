@@ -1,5 +1,4 @@
 /* eslint-disable no-underscore-dangle */
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, message, TreeSelect } from 'antd';
 import type { ProFormInstance } from '@ant-design/pro-form';
@@ -90,7 +89,7 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
     >
       <ProFormText
         name="roleName"
-        label="食享员工编号"
+        label="角色名称"
         disabled={type === 'UPDATE'}
         rules={[
           {

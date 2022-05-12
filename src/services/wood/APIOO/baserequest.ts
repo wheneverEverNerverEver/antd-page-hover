@@ -5,7 +5,7 @@ import { history } from 'umi';
 
 export function gotToken() {
     return localStorage.getItem('USER_TOKEN');
-  }
+}
 
 // request interceptor, change url or options.
 request.interceptors.request.use((url, options) => {
@@ -48,10 +48,13 @@ request.interceptors.response.use(async (response, options) => {
         localStorage.setItem('USER_TOKEN', tokenGot);
     }
 
-    if (`${response.status}` === '403' || (!isLogin && !tokenGotF)) {
+    if (`${response.status}` === '407' || (!isLogin && !tokenGotF)) {
         localStorage.removeItem('USER_TOKEN');
         history.push(`/user/login`, '_self');
         throw Error('请登录后进行操作');
+    }
+    if (`${response.status}` === '403') {
+        throw Error('你没有该权限，请联系管理员');
     }
     if (/\/api\/logout\/account/.test(url)) {
         localStorage.removeItem('USER_TOKEN');
