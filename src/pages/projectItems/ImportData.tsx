@@ -65,6 +65,7 @@ const ImportData: React.FC<{ refetch?: () => void }> = (props) => {
         placeholder="——"
         name="file"
         accept=".xls,.xlsx"
+        description=""
       />
 
     </ModalForm>

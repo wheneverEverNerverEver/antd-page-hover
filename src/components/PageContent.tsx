@@ -1,13 +1,14 @@
 import type { PropsWithChildren } from 'react';
-import { GridContent } from '@ant-design/pro-layout';
+import {  PageContainer } from '@ant-design/pro-layout';
+import type { CardProps } from 'antd';
 import { Card } from 'antd';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function PageContent(props: PropsWithChildren<{style?: React.CSSProperties }>) {
+export function PageContent(props: PropsWithChildren<{style?: React.CSSProperties ,cardProps?: CardProps}>) {
   const { children ,style} = props;
   return (
-    <GridContent>
-      <Card style={{ minHeight: '95vh' ,...style}}>{children}</Card>
-    </GridContent>
+    <PageContainer>
+      <Card style={{ minHeight: '95vh' ,...style}} >{children}</Card>
+    </PageContainer>
   );
 }

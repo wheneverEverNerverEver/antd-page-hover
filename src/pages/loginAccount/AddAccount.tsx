@@ -6,22 +6,16 @@ import { ProFormText, ModalForm } from '@ant-design/pro-form';
 import { PlusOutlined } from '@ant-design/icons';
 import { addAcount, findRoleData, updateUser } from '@/services/wood/api';
 import { labelValueEnd } from '../accounting';
-import type { TypeDic } from '../Role/components/UpdateForm';
-import { typeDict } from '../Role/components/UpdateForm';
+import { typeDict } from '@/services/wood/dict';
+
 
 const CryptoJS = require('crypto-js');
 
-export type FormValueType = Partial<API.UserItem>;
 
-export type UpdateFormProps = {
-  onCancel?: (flag?: boolean, formVals?: FormValueType) => void;
-  onSubmit?: (values: FormValueType) => Promise<void>;
-  refetch?: () => void;
-  values?: Partial<API.UserItem>;
-  type?: TypeDic
-};
 
-const AddAccount: React.FC<UpdateFormProps> = (props) => {
+const AddAccount: React.FC<API.UpdateFormProps<API.UserItem> &{
+  values: API.FormValueType<API.UserItem>
+}> = (props) => {
   const { refetch, type = 'ADD', values } = props;
   const formRef = useRef<ProFormInstance<API.UserItem>>();
 

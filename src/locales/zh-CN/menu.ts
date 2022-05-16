@@ -16,6 +16,7 @@ export default {
   'menu.products': '商品相关',
   'menu.products.sx': '食享商品',
   'menu.products.yz': '有赞商品',
+  'menu.products.import': '商品信息导入',
   'menu.treePlanting': '设置相关',
   'menu.treePlanting.loginAccount': '登录账户',
   'menu.treePlanting.role': '角色管理',

@@ -12,7 +12,11 @@ account:update	编辑用户
 product:add	新增商品
 product:delete	删除商品
 product:update	编辑商品
-product:import	导入商品
+
+product:import:sxProduct	导入食享商品
+product:import:yzProduct	导入有赞总部商品
+product:import:gjPricePrice	导入管家婆商品及价格
+product:import:yzPrice	导入有赞店铺价格
 
 department:import	导入分类
 department:delete	删除分类
@@ -36,7 +40,7 @@ aftermarket:update	新增售后
 aftermarket:image	售后图片上传
 aftermarket:delete	新增售后
 
-  
+
  */
 export type PermissionKey =
     'account:add' |
@@ -45,8 +49,11 @@ export type PermissionKey =
     'product:add' |
     'product:delete' |
     'product:update' |
-    'product:import' |
-    'product:importyz' |
+    'product:import:sxProduct' |
+    'product:import:yzProduct' |
+    'product:import:gjPricePrice' |
+    'product:import:yzPrice' |
+    'product:import:self' |
     'department:import' |
     'department:delete' |
     'customer:import' |

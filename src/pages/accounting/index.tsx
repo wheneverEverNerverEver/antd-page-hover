@@ -50,7 +50,7 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
             manager: manager?.value,
             delivery: delivery?.value,
             startTimeRange: startTime,
-            ...sort,
+            sort:sort?{...sort}:undefined,
             ...filter,
             ...rest,
         });
@@ -99,6 +99,7 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
                 },
             }, {
                 title: '送达日期',
+                sorter:true,
                 dataIndex: 'startTime',
                 render: (_, record) => (format(new Date(record.startTime!), 'yyyy-MM-dd ')),
                 valueType: "dateRange",
@@ -106,6 +107,7 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
             }, {
                 title: '客户名称',
                 dataIndex: 'customer',
+                sorter:true,
                 render: (_, record) => (
                     <Link to={`/customer/details/${record?.customer?.code}`}>{record.customer?.name}</Link>
                 ),
@@ -120,6 +122,7 @@ export const AccountingTable: React.FC<{ formQuery?: API.QueryBill }> = () => {
             }, {
                 title: '金额',
                 dataIndex: 'amount',
+                sorter:true,
             }, {
                 title: '状态',
                 dataIndex: 'state',

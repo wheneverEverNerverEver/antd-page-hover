@@ -11,27 +11,19 @@ import { PlusOutlined, EditOutlined } from '@ant-design/icons';
 import { updateAftersaleData, addftersaleData, findCustomerData, findDepartmentData } from '@/services/wood/api';
 import asyncDebounce from '@/components/asyncDebounce';
 import { labelValueEnd } from '@/pages/accounting';
+import { typeDict } from '@/services/wood/dict';
 
-export type FormValueType = Partial<API.AftermarketType>;
+type FormValueTypePA = API.FormValueType<API.AftermarketType>;
 
-type TypeDic = 'ADD' | 'UPDATE';
 
-export type UpdateFormProps = {
-    onCancel?: (flag?: boolean, formVals?: FormValueType) => void;
-    onSubmit?: (values: FormValueType) => Promise<void>;
-    values?: Partial<API.AftermarketType> & {
+type UpdateFormPropsPA =  API.UpdateFormProps<API.AftermarketType> & {
+    values?: FormValueTypePA & {
         customerObj?: API.CustomerType,
         deliveryObj?: API.DepartmentItem
     },
-    refetch?: () => void,
-    type: TypeDic;
-};
-const typeDict: Record<TypeDic, string> = {
-    ADD: '新增',
-    UPDATE: '编辑',
 };
 
-const OperateProductAftermarket: React.FC<UpdateFormProps> = (props) => {
+const OperateProductAftermarket: React.FC<UpdateFormPropsPA> = (props) => {
     const { type, values, refetch } = props;
     const formRef = useRef<ProFormInstance<API.AftermarketType>>();
     const afterCoumDebouce = asyncDebounce(async (name) => {

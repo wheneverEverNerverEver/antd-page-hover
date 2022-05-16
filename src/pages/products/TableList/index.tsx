@@ -1,16 +1,15 @@
 /* eslint-disable no-underscore-dangle */
-import { Drawer, message, Popconfirm, Button, Card } from 'antd';
-import React, { useState, useRef } from 'react';
+import { message, Popconfirm, Button } from 'antd';
+import React, {  useRef } from 'react';
 import { useIntl } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import ProDescriptions from '@ant-design/pro-descriptions';
-import OperateProduct from './components/UpdateForm';
-import ImportData from './components/ImportData';
-import { findProductData, deleteProductData } from '@/services/wood/api';
-import DownloadOutlined from '@ant-design/icons/lib/icons/DownloadOutlined';
+import OperateProduct from '../Component/UpdateForm';
+import { findProductNewData, deleteProductNewData } from '@/services/wood/api';
 import { PermissionCN } from '@/components/PermissionCN';
+import DetailDrawer from '../Component/DetailDrawer';
+
 
 /**
  * @en-US Add node
@@ -52,19 +51,8 @@ export function downloadFile(data: BlobPart, type: string, name?: string) {
  */
 
 const TableList: React.FC = () => {
-  /**
-   * @en-US Pop-up window of new window
-   * @zh-CN 新建窗口的弹窗
-   *  */
-  /**
-   * @en-US The pop-up window of the distribution update window
-   * @zh-CN 分布更新窗口的弹窗
-   * */
-
-  const [showDetail, setShowDetail] = useState<boolean>(false);
 
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<API.ProductListItem>();
 
   /**
    * @en-US International configuration
@@ -72,32 +60,25 @@ const TableList: React.FC = () => {
    * */
   const intl = useIntl();
 
-  const columns: ProColumns<API.ProductListItem>[] = [
+
+  const columns: ProColumns<API.ProductNewType>[] = [
     {
       title: '共同编码',
       dataIndex: 'code',
       tip: '共同编码',
-      render: (dom, entity) => {
+      render: (_, entity: API.ProductNewType) => {
         return (
-          <a
-            onClick={() => {
-              setCurrentRow(entity);
-              setShowDetail(true);
-            }}
-          >
-            {dom}
-          </a>
-        );
-      },
+          <DetailDrawer idFrom={entity?._id} name={entity?.code} type="shixiang"/>
+          )}
     },
     {
       title: '食享名称',
-      dataIndex: 'nameSx',
+      dataIndex: 'sxName',
       valueType: 'text',
     },
     {
       title: '管家婆名称',
-      dataIndex: 'nameGj',
+      dataIndex: 'gjname',
       valueType: 'text',
     },
     {
@@ -105,15 +86,15 @@ const TableList: React.FC = () => {
       dataIndex: 'action',
       valueType: 'option',
       render: (_, record) => [
-        <PermissionCN permissionKey="product:update">
-          <OperateProduct type="UPDATE" values={record} refetchTableRef={actionRef} />
+        <PermissionCN permissionKey="product:update" key="product:update">
+          <OperateProduct productType='shixiang' type="UPDATE" id={record?._id} refetchTableRef={actionRef} />
         </PermissionCN>,
-        <PermissionCN permissionKey="product:delete">
+        <PermissionCN permissionKey="product:delete" key="product:delete">
           <Popconfirm
             title="你确定要删除该商品吗？"
             onConfirm={async () => {
               if (record._id) {
-                const result = await deleteProductData({ id: record._id });
+                const result = await deleteProductNewData({ id: record._id });
                 if (!(result as API.ErrorDe)?.error) {
                   actionRef?.current?.reload();
                   message.success('删除成功');
@@ -137,7 +118,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.ProductListItem, API.QueryProduct>
+      <ProTable<API.ProductNewType, API.QueryProduct>
         headerTitle={intl.formatMessage({
           id: 'pages.searchTable.title',
           defaultMessage: 'Enquiry form',
@@ -150,108 +131,21 @@ const TableList: React.FC = () => {
         request={async (params) => {
           // 表单搜索项会从 params 传入，传递给后端接口。
           const { current, pageSize, ...rest } = params;
-          return findProductData({
+          return findProductNewData({
             limit: pageSize,
             page: current,
             ...rest,
+            productChoiceType:'shixiang'
           });
         }}
         options={false}
         toolBarRender={() => [
-          <PermissionCN permissionKey="product:add">
-            <OperateProduct type="ADD" refetchTableRef={actionRef} />
-          </PermissionCN>
-          ,
-          <PermissionCN permissionKey="product:import">
-            <ImportData
-              refetch={() => {
-                actionRef?.current?.reload?.();
-              }}
-            />
-          </PermissionCN>,
-          <a style={{ display: 'inline-block' }} download href="/api/product/download">
-            <Button icon={<DownloadOutlined />}>
-              下载全部商品
-            </Button>
-          </a>
-        ]}
+          <PermissionCN permissionKey="product:add" key="add">
+            <OperateProduct type="ADD" productType='shixiang'  refetchTableRef={actionRef} />
+          </PermissionCN>]}
         columns={columns}
-        pagination={{
-          pageSizeOptions: ['10'],
-        }}
       />
-      <Drawer
-        width={600}
-        visible={showDetail}
-        onClose={() => {
-          setCurrentRow(undefined);
-          setShowDetail(false);
-        }}
-        closable={false}
-      >
-        {currentRow?.code && (
-          <ProDescriptions<API.ProductListItem>
-            column={1}
-            title={currentRow?.code}
-            request={async () => ({
-              data: currentRow || {},
-            })}
-            params={{
-              id: currentRow?.code,
-            }}
-            columns={[
-              {
-                title: '共同编码',
-                key: 'code',
-                dataIndex: 'code',
-              },
-              {
-                title: '食享名称',
-                key: 'nameSx',
-                dataIndex: 'nameSx',
-              },
-              {
-                title: '管家婆名称',
-                key: 'nameGj',
-                dataIndex: 'nameGj',
-              },
-              {
-                title: '规格',
-                key: 'specifications',
-                dataIndex: 'specifications',
-              },
-              {
-                title: '',
-                key: 'unit',
-                dataIndex: 'unit',
-                render: () => (
-                  <Card title="单位对应（第一个默认是基本单位）">
-                    <table>
-                      <thead>
-                        <tr style={{ borderBottom: '1px solid #f0f0f0', padding: '5px 0' }}>
-                          <th style={{ textAlign: 'left' }}>食享单位</th>
-                          <th style={{ textAlign: 'left' }}>管家婆单位</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {currentRow?.unit?.map((item) => (
-                          <tr
-                            key={item?._id}
-                            style={{ borderBottom: '1px solid #f0f0f0', padding: '5px 0' }}
-                          >
-                            <td>{item.unitSx}</td>
-                            <td>{item.unitGj}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </Card>
-                ),
-              },
-            ]}
-          ></ProDescriptions>
-        )}
-      </Drawer>
+
     </PageContainer>
   );
 };

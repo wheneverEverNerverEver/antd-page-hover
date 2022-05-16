@@ -54,6 +54,7 @@ const ImportImg: React.FC<{
         placeholder="——"
         name="img"
         accept="image/png,image/jpg,image/jpeg"
+        description=""
       />
 
     </ModalForm>

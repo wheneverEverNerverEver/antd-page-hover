@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { message, Popconfirm, Button, Tooltip } from 'antd';
 import React, { useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -9,8 +8,6 @@ import { findRoleData, deleteRoleData } from '@/services/wood/api';
 import ImportData from './components/ImportData';
 import { PageContent } from '@/components/PageContent';
 import { PermissionCN } from '@/components/PermissionCN';
-
-
 
 
 const RoleList: React.FC = () => {
@@ -43,7 +40,7 @@ const RoleList: React.FC = () => {
       title: '操作',
       dataIndex: 'action',
       render: (_, record) => [
-        <PermissionCN permissionKey="role:update">
+        <PermissionCN permissionKey="role:update" key='update'>
           <OperateRole
             type="UPDATE"
             values={{
@@ -53,7 +50,7 @@ const RoleList: React.FC = () => {
             refetchTableRef={actionRef}
           />
         </PermissionCN>,
-        <PermissionCN permissionKey="role:delete">
+        <PermissionCN permissionKey="role:delete" key="delete">
           <Popconfirm
             title="你确定要删除该角色吗？"
             onConfirm={async () => {
@@ -96,10 +93,10 @@ const RoleList: React.FC = () => {
           }}
           options={false}
           toolBarRender={() => [
-            <PermissionCN permissionKey="role:add">
+            <PermissionCN permissionKey="role:add" key="add">
               <OperateRole type="ADD" refetchTableRef={actionRef} />
             </PermissionCN>,
-            <PermissionCN permissionKey="role:authImport">
+            <PermissionCN permissionKey="role:authImport" key="import">
               <ImportData refetch={() => { }} />
             </PermissionCN>
           ]}

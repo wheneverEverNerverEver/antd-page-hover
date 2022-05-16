@@ -79,6 +79,7 @@ const ImportData: React.FC<{
         placeholder="——"
         name="file"
         accept=".xls,.xlsx"
+        description=""
       />
 
     </ModalForm>

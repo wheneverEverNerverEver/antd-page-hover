@@ -31,7 +31,7 @@ declare namespace API {
 
   type TransformBack = {
     fileName?: string;
-    productToday?: API.ProductListItem[];
+    productToday?: API.ProductNewType[];
     newConstomes?: Array<{ id: string, name: string, phone: string }>,
     productNew?: Array<{ code: string, name: string }>
     samePhone?: Array<{ phone: string }>
@@ -95,6 +95,7 @@ declare namespace API {
     page?: number;
     code?: string;
   };
+
 
   type QueryManager = {
     limit?: number;
@@ -291,5 +292,52 @@ declare namespace API {
     imgFromCusUploader?: UserItem, /** 售后截图上传人*/
     imgRefundUploader?: UserItem, /** 售后退款截图上传人*/
   }
+  //商品类别
+  type ProductChoiceType='youzan.retail' | 'youzan.wholesale' | 'youzan.restaurant'| 'shixiang' | 'youzan'|'baseGj';
+
+
+  type ProductDetailType={
+      code?: string, // 管家婆商品编码
+      /** 有赞价格 */
+      yzretailPrice?: number, // 有赞零售单位价格
+      yzrestPrice?: number, // 有赞餐饮单位价格
+      yzwholesPrice?: number, // 有赞批发单位价格
+      /** 管家婆价格 */
+      gjretailPrice?: number, // 管家婆零售单位价格
+      gjrestPrice?: number, // 管家婆餐饮单位价格
+      gjwholesPrice?: number, // 管家婆批发单位价格
+      /** 单位 */
+      yzunit?: string, // 有赞单位
+      gjunit?: string, // 管家婆单位
+      sxunit?: string, // 食享单位
+      productId?: string, // 对应商品Id
+      _id?:string,
+  }
+
+  type ProductNewType={
+    productDetail?:ProductDetailType[]//商品参数
+    barCode?: string, // 商品条码
+    code?: string, // 商品条码
+    gjname?: string, // 商品名称
+    sxName?: string, // 食享名称
+    yzName?: string, // 有赞名称
+    gjspecifications?: string, // 管家婆规格
+    yzspecifications?: string, // 有赞规格
+    sxspecifications?: string, // 食享名称
+    _id?:string,
+  }
+  type QueryProductNew =ProductNewType & BaseQuery & {
+    productChoiceType:productChoiceType,
+  };
+  type TypeDic = 'ADD' | 'UPDATE';
+
+   type FormValueType<T> = Partial<T>;
+
+    type UpdateFormProps<T> = {
+      onCancel?: (flag?: boolean, formVals?: FormValueType<T>) => void;
+      onSubmit?: (values: FormValueType<T>) => Promise<void>;
+      refetch?: () => void;
+      type: TypeDic
+    };
 }
 

@@ -31,7 +31,7 @@ export function DownloadComponent(props: {
             {fileName && tick > 0 && (
                 <a
                     href={`${downloadUrl}${fileName}`}
-                    style={{ display: 'block', padding: '0 5%', boxSizing: 'border-box' }}
+                    style={{ display: 'block', padding: '0 5%', boxSizing: 'border-box',margin:'auto' }}
                 >
                     <Button
                         type="primary"

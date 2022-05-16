@@ -68,11 +68,11 @@
         hideInMenu: true,
         component: './customer/transformCustomer',
       },
-      {
-        name: 'aftermarket',
-        path: '/customer/aftermarket',
-        component: './customer/aftersale',
-      },
+      // {
+      //   name: 'aftermarket',
+      //   path: '/customer/aftermarket',
+      //   component: './customer/aftersale',
+      // },
       {
         name: 'oneDetail',
         path: '/customer/details/:id',
@@ -94,6 +94,11 @@
     icon: 'table',
     path: '/products',
     routes: [
+      {
+        path: '/products/dataImport',
+        name: 'import',
+        component: './products/ImportProduct',
+      },
       {
         path: '/products/listSx',
         name: 'sx',

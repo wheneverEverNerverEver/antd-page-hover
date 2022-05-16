@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, message, TreeSelect } from 'antd';
 import type { ProFormInstance } from '@ant-design/pro-form';
@@ -7,24 +6,14 @@ import { PlusOutlined, EditOutlined } from '@ant-design/icons';
 import { updateRoleData, addRoleData, findAuthData } from '@/services/wood/api';
 import type { ActionType } from '@ant-design/pro-table';
 import type { DataNode } from 'antd/lib/tree';
+import { typeDict } from '@/services/wood/dict';
 
-export type FormValueType = Partial<API.RoleType>;
-
-export type TypeDic = 'ADD' | 'UPDATE';
-
-export type UpdateFormProps = {
-  onCancel?: (flag?: boolean, formVals?: FormValueType) => void;
-  onSubmit?: (values: FormValueType) => Promise<void>;
+type UpdateFormProps =API.UpdateFormProps<API.RoleType> & {
   values?: Partial<API.RoleType>;
-  type: TypeDic;
   refetchTableRef?: React.MutableRefObject<ActionType | undefined>;
 };
-export const typeDict: Record<TypeDic, string> = {
-  ADD: '新增',
-  UPDATE: '编辑',
-};
 
-const OperateProduct: React.FC<UpdateFormProps> = (props) => {
+const OperateRoleProduct: React.FC<UpdateFormProps> = (props) => {
   const { type, values, refetchTableRef } = props;
   const formRef = useRef<ProFormInstance<API.RoleType>>();
   const [treeData, setTreeData] = useState<DataNode[]>()
@@ -111,4 +100,4 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
   );
 };
 
-export default OperateProduct;
+export default OperateRoleProduct;

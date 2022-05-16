@@ -48,6 +48,7 @@ const ImportData: React.FC<Record<'refetch', () => void>> = (props) => {
         placeholder="——"
         name="file"
         accept=".xls,.xlsx"
+        description=""
       />
     </ModalForm>
   );
