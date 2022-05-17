@@ -14,7 +14,7 @@ const CryptoJS = require('crypto-js');
 
 
 const AddAccount: React.FC<API.UpdateFormProps<API.UserItem> &{
-  values: API.FormValueType<API.UserItem>
+  values?: API.FormValueType<API.UserItem>
 }> = (props) => {
   const { refetch, type = 'ADD', values } = props;
   const formRef = useRef<ProFormInstance<API.UserItem>>();
@@ -116,6 +116,9 @@ const AddAccount: React.FC<API.UpdateFormProps<API.UserItem> &{
                 }, {
                   max: 30,
                   message: '请控制在30个字符以内'
+                },{
+                  min: 8,
+                  message: '至少需要8位字符'
                 }
               ]}
             />
@@ -129,6 +132,9 @@ const AddAccount: React.FC<API.UpdateFormProps<API.UserItem> &{
                 }, {
                   max: 30,
                   message: '请控制在30个字符以内'
+                },{
+                  min: 8,
+                  message: '至少需要8位字符'
                 }
               ]}
             />

@@ -46,7 +46,6 @@ const Login: React.FC = () => {
       // 登录
       const encodePassword = CryptoJS.AES.encrypt(values?.password, 'caikeluofusiji').toString();
       const msg = await login({ ...values, password: encodePassword });
-
       if (!(msg as API.ErrorDe)?.error && msg) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',

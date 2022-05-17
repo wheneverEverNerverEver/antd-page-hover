@@ -7,6 +7,7 @@ import { PageContent } from '@/components/PageContent';
 import { deleteUser, findUser } from '@/services/wood/api';
 import { useRequest } from 'umi';
 import { PermissionCN } from '@/components/PermissionCN';
+import PasswordChange from './PasswordChange';
 
 const LoginAccount: React.FC = () => {
 
@@ -19,6 +20,7 @@ const LoginAccount: React.FC = () => {
       <Space direction="vertical" style={{ width: '100%' }}>
         <PermissionCN permissionKey="account:add">
           <AddAccount
+            type="ADD"
             refetch={() => {
               refresh?.()
             }}
@@ -37,7 +39,6 @@ const LoginAccount: React.FC = () => {
               render: (_, record) => (
                 <>
                   <PermissionCN permissionKey="account:update">
-
                     <AddAccount
                       refetch={() => {
                         refresh?.()
@@ -71,6 +72,11 @@ const LoginAccount: React.FC = () => {
                     </Popconfirm>
                   </PermissionCN>
 
+                  <PermissionCN permissionKey='account:changeyes'>
+                    <PasswordChange id={record._id} accountName={record.accountName} refetch={()=>{
+                          refresh?.()
+                    }}/>
+                  </PermissionCN>
                 </>
               ),
             },

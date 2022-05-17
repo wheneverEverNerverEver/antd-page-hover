@@ -8,6 +8,7 @@ import { includes } from 'lodash';
  * account:add	新增用户
 account:delete	删除用户
 account:update	编辑用户
+account:changeyes 修改密码
 
 product:add	新增商品
 product:delete	删除商品
@@ -46,6 +47,7 @@ export type PermissionKey =
     'account:add' |
     'account:delete' |
     'account:update' |
+    'account:changeyes'|
     'product:add' |
     'product:delete' |
     'product:update' |

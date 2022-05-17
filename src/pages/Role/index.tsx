@@ -84,7 +84,6 @@ const RoleList: React.FC = () => {
           rowKey="_id"
           search={false}
           request={async (params) => {
-            // 表单搜索项会从 params 传入，传递给后端接口。
             const { current, pageSize } = params;
             return findRoleData({
               limit: pageSize,
@@ -97,12 +96,14 @@ const RoleList: React.FC = () => {
               <OperateRole type="ADD" refetchTableRef={actionRef} />
             </PermissionCN>,
             <PermissionCN permissionKey="role:authImport" key="import">
-              <ImportData refetch={() => { }} />
+              <ImportData refetch={() => {
+                actionRef?.current?.reload?.()
+              }} />
             </PermissionCN>
           ]}
           columns={columns}
           pagination={{
-            pageSizeOptions: ['10'],
+            pageSizeOptions: ['20'],
             showSizeChanger: false,
           }}
         />

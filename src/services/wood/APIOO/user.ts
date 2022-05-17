@@ -59,6 +59,14 @@ export async function updateUser(params: { id: string } & API.UserItem, options?
         ...(options || {}),
     });
 }
+/** 修改密码  */
+export async function ChangeWordUser(params: { id: string,newWord: string }, options?: Record<string, any>) {
+  return request<API.ErrorDe>('/api/account/updateyes', {
+      method: 'POST',
+      data: params,
+      ...(options || {}),
+  });
+}
 /** 查询用户  */
 export async function findUser(params: API.UserItem, options?: Record<string, any>) {
     return request<Partial<RequestData<API.UserItem>>>('/api/account/find', {
