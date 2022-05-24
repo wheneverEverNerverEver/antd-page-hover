@@ -229,7 +229,7 @@ export const YouZanDepart = (): React.ReactNode => {
               render: (_, record) => {
                 const paramName=shopInPrice[formRef.current?.getFieldValue?.('belong')]?.price
                 return record?.productDetail?.map(v=>{
-                  return (v[paramName] || '0')+'/'+(v.yzunit||'0')
+                  return `${v[paramName] || '0'}/${v.yzunit||'0'}`
                 }).join(',');
               },
             },
@@ -239,7 +239,7 @@ export const YouZanDepart = (): React.ReactNode => {
               render: (_, record) => {
                 const paramName=shopInPrice[formRef.current?.getFieldValue?.('belong')]?.gjPrice
                 return record?.productDetail?.map(v=>{
-                  return (v[paramName] || '0')+'/'+(v.gjunit||'0')
+                  return `${v[paramName] || '0'}/${v.gjunit||'0'}`
                 }).join(',');
               },
             },

@@ -1,7 +1,7 @@
 import { Row, Col, Typography } from 'antd';
 import DepartmentSelect from './departmentSelect';
 
-const OtherDepartment: React.FC = ({}) => {
+const OtherDepartment: React.FC = () => {
   return (
     <>
       <Typography
@@ -22,9 +22,10 @@ const OtherDepartment: React.FC = ({}) => {
         <Col span={12}>
           <DepartmentSelect
             name="otherRouter"
-            initialValue="YWN32"
+            initialValue={["YWN32"]}
             type="DISTRICT"
             label="对应路线"
+            mode="multiple"
           />
         </Col>
         <Col span={12}>
