@@ -36,12 +36,18 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
       <Button
         type="primary"
         onClick={() => {
-          findProductNewOneData({ id }).then((res) => {
-            if (res?._id) {
-              setValue(res);
-              setVisible(true);
-            }
-          });
+          if (type === 'UPDATE') {
+            findProductNewOneData({ id }).then((res) => {
+              if (res?._id) {
+                setValue(res);
+                setVisible(true);
+              }
+            });
+          } else {
+            setValue({});
+            setVisible(true);
+          }
+
         }}
       >
         {type === 'ADD' ? <PlusOutlined /> : <EditOutlined />}
@@ -68,7 +74,7 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
             let back: API.ProductNewType | API.ErrorDe;
             const { productDetail = [] } = valuesGot;
             const tempObj = {};
-            //判断管家婆单位不相等
+            // 判断管家婆单位不相等
             for (let i = 0; i < productDetail.length; i++) {
               const unitGj = productDetail[i]?.gjunit;
               if (unitGj) {
@@ -114,7 +120,7 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
               rules={[
                 {
                   required: true,
-                  message: '请填入' + codeName,
+                  message: `请填入${codeName}`,
                 },
               ]}
             />
@@ -136,11 +142,11 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
             <ProFormText
               width="md"
               name={mingziduiying['名称'][productType]}
-              label={proFromName + '名称'}
+              label={`${proFromName}名称`}
               rules={[
                 {
                   required: true,
-                  message: '请输入' + proFromName + '名称！',
+                  message: `请输入${proFromName}名称！`,
                 },
               ]}
             />
@@ -161,7 +167,7 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
             <ProFormText
               width="md"
               name={mingziduiying['规格'][productType]}
-              label={proFromName + '规格'}
+              label={`${proFromName}规格`}
             />
             <ProFormText width="md" name="gjspecifications" label="管家婆规格" />
           </ProForm.Group>
@@ -183,14 +189,14 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
             initialValue={
               type === 'ADD'
                 ? [
-                    { [anthoerUnit]: '包', gjunit: '包' },
-                    { [anthoerUnit]: '箱', gjunit: '箱' },
-                  ]
+                  { [anthoerUnit]: '包', gjunit: '包' },
+                  { [anthoerUnit]: '箱', gjunit: '箱' },
+                ]
                 : undefined
             }
           >
             <ProForm.Group key="base">
-              <ProFormText name={anthoerUnit} label={proFromName + '单位'} />
+              <ProFormText name={anthoerUnit} label={`${proFromName}单位`} />
               <ProFormText name="gjunit" label="管家婆对应单位" />
             </ProForm.Group>
           </ProFormList>
