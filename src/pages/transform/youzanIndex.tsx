@@ -18,6 +18,8 @@ type FormTypeHere = {
   fileGoods?: any;
   warehouse?: string;
   fileOrders?: any;
+  otherRouter?: string[];
+  otherDepartment?: string;
 };
 
 export const YouZanDepart = (): React.ReactNode => {
@@ -57,7 +59,7 @@ export const YouZanDepart = (): React.ReactNode => {
                 },
               }}
               onFinish={async (values) => {
-                const { fileGoods, fileOrders, warehouse, department, belong } = values;
+                const { fileGoods, fileOrders, warehouse, department, belong, otherDepartment, otherRouter } = values;
                 const fileOr = fileOrders?.[0].originFileObj;
                 const fileGo = fileGoods?.[0].originFileObj;
                 if (!fileGoods || !fileOrders || !warehouse || !belong) {
@@ -73,6 +75,8 @@ export const YouZanDepart = (): React.ReactNode => {
                     department,
                     warehouse,
                     belong,
+                    otherDepartment,
+                    otherRouter
                   },
                 );
                 if (result) {
@@ -197,23 +201,23 @@ export const YouZanDepart = (): React.ReactNode => {
       )}
 
       {(submitResult?.productNew || []).length > 0 && (
-          <Card
-            title={
-              <Typography.Title type="danger" level={4}>
-                尚未同步的商品!!
-              </Typography.Title>
-            }
-          >
-            <Table
-              dataSource={submitResult?.productNew || []}
-              rowKey="code"
-              columns={[
-                { dataIndex: 'code', title: '商品条码' },
-                { dataIndex: 'name', title: '商品名称' },
-              ]}
-            />
-          </Card>
-        )}
+        <Card
+          title={
+            <Typography.Title type="danger" level={4}>
+              尚未同步的商品!!
+            </Typography.Title>
+          }
+        >
+          <Table
+            dataSource={submitResult?.productNew || []}
+            rowKey="code"
+            columns={[
+              { dataIndex: 'code', title: '商品条码' },
+              { dataIndex: 'name', title: '商品名称' },
+            ]}
+          />
+        </Card>
+      )}
 
       <Card title="含有的商品">
         <Table
@@ -227,9 +231,9 @@ export const YouZanDepart = (): React.ReactNode => {
               dataIndex: '_id',
               title: '店铺价格',
               render: (_, record) => {
-                const paramName=shopInPrice[formRef.current?.getFieldValue?.('belong')]?.price
-                return record?.productDetail?.map(v=>{
-                  return `${v[paramName] || '0'}/${v.yzunit||'0'}`
+                const paramName = shopInPrice[formRef.current?.getFieldValue?.('belong')]?.price
+                return record?.productDetail?.map(v => {
+                  return `${v[paramName] || '0'}/${v.yzunit || '0'}`
                 }).join(',');
               },
             },
@@ -237,9 +241,9 @@ export const YouZanDepart = (): React.ReactNode => {
               dataIndex: 'barCode',
               title: '管家婆对应价格',
               render: (_, record) => {
-                const paramName=shopInPrice[formRef.current?.getFieldValue?.('belong')]?.gjPrice
-                return record?.productDetail?.map(v=>{
-                  return `${v[paramName] || '0'}/${v.gjunit||'0'}`
+                const paramName = shopInPrice[formRef.current?.getFieldValue?.('belong')]?.gjPrice
+                return record?.productDetail?.map(v => {
+                  return `${v[paramName] || '0'}/${v.gjunit || '0'}`
                 }).join(',');
               },
             },
