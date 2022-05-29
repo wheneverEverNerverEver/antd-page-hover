@@ -168,8 +168,8 @@ export const YouZanDepart = (): React.ReactNode => {
             dataSource={submitResult?.newConstomes || []}
             rowKey="phone"
             columns={[
-              { dataIndex: 'name', title: '收（取）货人' },
-              { dataIndex: 'phone', title: '电话号码' },
+              { dataIndex: 'name', title: '买家姓名' },
+              { dataIndex: 'phone', title: '注册的电话号码' },
             ]}
           />
         </Card>
