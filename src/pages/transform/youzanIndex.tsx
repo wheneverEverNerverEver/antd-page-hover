@@ -25,6 +25,7 @@ type FormTypeHere = {
 export const YouZanDepart = (): React.ReactNode => {
   const formRef = useRef<ProFormInstance<FormTypeHere>>();
   const [submitResult, recordSubmitResult] = useState<API.TransformBack | undefined>();
+  const [loading, setLoading] = useState<boolean>(false)
   return (
     <PageContainer>
       <Card>
@@ -49,6 +50,7 @@ export const YouZanDepart = (): React.ReactNode => {
                         display: 'block',
                         margin: 'auto',
                       }}
+                      loading={loading}
                       onClick={() => {
                         props.submit();
                       }}
@@ -66,6 +68,7 @@ export const YouZanDepart = (): React.ReactNode => {
                   message.error('请填写必填项');
                   return false;
                 }
+                setLoading(true)
                 const result = await transformProductYZData(
                   {
                     fileGoods: fileGo,
@@ -79,6 +82,8 @@ export const YouZanDepart = (): React.ReactNode => {
                     otherRouter
                   },
                 );
+                setLoading(false)
+
                 if (result) {
                   recordSubmitResult({
                     fileName: (result as API.TransformBack)?.fileName,
@@ -122,6 +127,7 @@ export const YouZanDepart = (): React.ReactNode => {
                     rules={[{ required: true, message: '请上传商品报表(Goods_youzan)文件' }]}
                     onChange={() => {
                       recordSubmitResult((v) => ({ ...(v || {}), fileName: undefined }));
+                      return false;
                     }}
                   />
                 </Col>
@@ -144,6 +150,7 @@ export const YouZanDepart = (): React.ReactNode => {
                     rules={[{ required: true, message: '请上传订单报表(Order_youzan)文件' }]}
                     onChange={() => {
                       recordSubmitResult((v) => ({ ...(v || {}), fileName: undefined }));
+                      return false;
                     }}
                   />
                 </Col>
@@ -179,7 +186,7 @@ export const YouZanDepart = (): React.ReactNode => {
         <Card
           title={
             <Typography.Title type="danger" level={4}>
-              重复的电话号码，需确认使用哪一个账号
+              重复的电话号码，可确认使用哪一个用户抬头
             </Typography.Title>
           }
         >
@@ -187,7 +194,6 @@ export const YouZanDepart = (): React.ReactNode => {
             dataSource={submitResult?.samePhone || []}
             rowKey="phone"
             columns={[
-              { dataIndex: 'index', title: '序号' },
               {
                 dataIndex: 'phone',
                 title: '电话号码',
@@ -195,6 +201,7 @@ export const YouZanDepart = (): React.ReactNode => {
                   <Link to={`/customer/same/${record?.phone}`}>{record.phone}</Link>
                 ),
               },
+              { dataIndex: 'name', title: '同一手机号下的用户抬头' },
             ]}
           />
         </Card>
@@ -204,7 +211,7 @@ export const YouZanDepart = (): React.ReactNode => {
         <Card
           title={
             <Typography.Title type="danger" level={4}>
-              尚未同步的商品!!
+              尚未同步的商品或是没有相对应单位的商品!!
             </Typography.Title>
           }
         >
@@ -212,7 +219,7 @@ export const YouZanDepart = (): React.ReactNode => {
             dataSource={submitResult?.productNew || []}
             rowKey="code"
             columns={[
-              { dataIndex: 'code', title: '商品条码' },
+              { dataIndex: 'code', title: '有赞商品条码' },
               { dataIndex: 'name', title: '商品名称' },
             ]}
           />
