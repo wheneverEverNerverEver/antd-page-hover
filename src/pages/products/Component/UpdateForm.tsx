@@ -14,7 +14,7 @@ import { mingziduiying, typeDict } from '@/services/wood/dict';
 
 type UpdateFormProps = API.UpdateFormProps<API.ProductNewType> & {
   id?: string;
-  productType: API.ProductChoiceType;
+  productType: API.ProductChoiceType | 'shixiang';
   refetchTableRef?: React.MutableRefObject<ActionType | undefined>;
 };
 
@@ -47,7 +47,6 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
             setValue({});
             setVisible(true);
           }
-
         }}
       >
         {type === 'ADD' ? <PlusOutlined /> : <EditOutlined />}
@@ -75,6 +74,7 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
             const { productDetail = [] } = valuesGot;
             const tempObj = {};
             // 判断管家婆单位不相等
+            // eslint-disable-next-line no-plusplus
             for (let i = 0; i < productDetail.length; i++) {
               const unitGj = productDetail[i]?.gjunit;
               if (unitGj) {
@@ -189,9 +189,9 @@ const OperateProduct: React.FC<UpdateFormProps> = (props) => {
             initialValue={
               type === 'ADD'
                 ? [
-                  { [anthoerUnit]: '包', gjunit: '包' },
-                  { [anthoerUnit]: '箱', gjunit: '箱' },
-                ]
+                    { [anthoerUnit]: '包', gjunit: '包' },
+                    { [anthoerUnit]: '箱', gjunit: '箱' },
+                  ]
                 : undefined
             }
           >

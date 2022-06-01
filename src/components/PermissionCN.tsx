@@ -1,4 +1,3 @@
-
 import type { PropsWithChildren } from 'react';
 import { useMemo } from 'react';
 import { useModel } from 'umi';
@@ -25,6 +24,7 @@ department:showIf   是否在菜单中显示
 
 customer:import	导入客户
 customer:delete	删除客户
+customer:update:indeed 覆盖式导入客户
 
 bill:image	上传订单图片
 bill:update	确认收款
@@ -44,43 +44,47 @@ aftermarket:delete	新增售后
 
  */
 export type PermissionKey =
-    'account:add' |
-    'account:delete' |
-    'account:update' |
-    'account:changeyes'|
-    'product:add' |
-    'product:delete' |
-    'product:update' |
-    'product:import:sxProduct' |
-    'product:import:yzProduct' |
-    'product:import:gjPricePrice' |
-    'product:import:yzPrice' |
-    'product:import:self' |
-    'department:import' |
-    'department:delete' |
-    'customer:import' |
-    'customer:delete' |
-    'bill:image' |
-    'bill:update' |
-    'bill:import' |
-    'bill:importSmail' |
-    'role:authImport' |
-    'role:delete' |
-    'role:update' |
-    'role:add' |
-    'department:showIf' |
-    'aftermarket:add' |
-    'aftermarket:update' |
-    'aftermarket:delete' |
-    'aftermarket:image'
+  | 'account:add'
+  | 'account:delete'
+  | 'account:update'
+  | 'account:changeyes'
+  | 'product:add'
+  | 'product:delete'
+  | 'product:update'
+  | 'product:import:sxProduct'
+  | 'product:import:yzProduct'
+  | 'product:import:gjPricePrice'
+  | 'product:import:yzPrice'
+  | 'product:import:self'
+  | 'department:import'
+  | 'department:delete'
+  | 'customer:import'
+  | 'customer:delete'
+  | 'customer:update:indeed'
+  | 'bill:image'
+  | 'bill:update'
+  | 'bill:import'
+  | 'bill:importSmail'
+  | 'role:authImport'
+  | 'role:delete'
+  | 'role:update'
+  | 'role:add'
+  | 'department:showIf'
+  | 'aftermarket:add'
+  | 'aftermarket:update'
+  | 'aftermarket:delete'
+  | 'aftermarket:image';
 
 export function PermissionCN(props: PropsWithChildren<{ permissionKey: PermissionKey }>) {
-    const { permissionKey, children } = props
-    const { initialState } = useModel('@@initialState');
-    const ifHadPer = useMemo(() => includes(initialState?.currentUser?.roleCode || [], permissionKey), [initialState, permissionKey])
+  const { permissionKey, children } = props;
+  const { initialState } = useModel('@@initialState');
+  const ifHadPer = useMemo(
+    () => includes(initialState?.currentUser?.roleCode || [], permissionKey),
+    [initialState, permissionKey],
+  );
 
-    if (ifHadPer) {
-        return (<>{children}</>)
-    }
-    return (<></>);
+  if (ifHadPer) {
+    return <>{children}</>;
+  }
+  return <></>;
 }

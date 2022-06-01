@@ -26,19 +26,29 @@
     component: './index',
   },
   /** 订单转换   */
+  /**
+   * {
+      name: 'shixiang',
+      path: '/transform/shixiang',
+      component: './transform',
+    },
+      {
+        path: '/products/listSx',
+        name: 'sx',
+        component: './products/TableList',
+      },
+   */
   {
     path: '/transform',
     name: 'transform',
     icon: 'smile',
-    routes: [{
-      name: 'shixiang',
-      path: '/transform/shixiang',
-      component: './transform',
-    }, {
-      name: 'youzan',
-      path: '/transform/youzan',
-      component: './transform/youzanIndex',
-    }]
+    routes: [
+      {
+        name: 'youzan',
+        path: '/transform/youzan',
+        component: './transform/youzanIndex',
+      },
+    ],
   },
   /** 客户   */
   {
@@ -55,14 +65,15 @@
         name: 'choiceManager',
         path: '/customer/choiceManager',
         component: './accounting/choiceManager',
-
-      }, {
+      },
+      {
         name: 'accounting',
         path: '/customer/choiceManager/:accounting',
         component: './accounting',
         hideInMenu: true,
         parentKeys: ['/customer/choiceManager'],
-      }, {
+      },
+      {
         name: 'transform',
         path: '/customer/transform',
         hideInMenu: true,
@@ -79,7 +90,8 @@
         component: './customer/customerBillsDetail',
         hideInMenu: true,
         parentKeys: ['/customer'],
-      }, {
+      },
+      {
         name: 'onePhone',
         path: '/customer/same/:phone',
         component: './customer/customerPhonesDetail',
@@ -100,14 +112,11 @@
         component: './products/ImportProduct',
       },
       {
-        path: '/products/listSx',
-        name: 'sx',
-        component: './products/TableList',
-      }, {
         path: '/products/listYz',
         name: 'yz',
         component: './products/TableListYZ',
-      },]
+      },
+    ],
   },
   /** 分类   */
   {
@@ -127,11 +136,13 @@
         path: '/treePlanting/account',
         name: 'loginAccount',
         component: './loginAccount',
-      }, {
+      },
+      {
         name: 'role',
         path: '/treePlanting/role',
         component: './role',
-      }, {
+      },
+      {
         name: 'log',
         path: '/treePlanting/log',
         component: './log',

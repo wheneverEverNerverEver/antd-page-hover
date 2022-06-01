@@ -1,23 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import { Button, Drawer, Table } from 'antd';
 import { mingziduiying, productChoiceTypeObjDic } from '@/services/wood/dict';
 import { findProductNewOneData } from '@/services/wood/api';
 
 const DetailDrawer: React.FC<{
-  type: API.ProductChoiceType;
+  type: API.ProductChoiceType | 'shixiang';
   idFrom?: string;
   name?: string;
 }> = ({ type, idFrom, name }) => {
   const [showDetail, setShowDetail] = useState<boolean>(false);
 
   const [currentRow, setCurrentRow] = useState<API.ProductNewType>();
-
-  useEffect(() => {
-    if (showDetail && idFrom) {
-    }
-  }, [idFrom, showDetail]);
-
 
   return (
     <>
@@ -38,7 +32,6 @@ const DetailDrawer: React.FC<{
           width={600}
           visible={showDetail}
           onClose={() => {
-
             setCurrentRow(undefined);
             setShowDetail(false);
           }}

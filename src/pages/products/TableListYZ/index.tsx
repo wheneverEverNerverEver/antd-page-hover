@@ -7,7 +7,7 @@ import { deleteProductNewData, findProductNewData } from '@/services/wood/api';
 import { PermissionCN } from '@/components/PermissionCN';
 import { Popconfirm, message, Button, Radio, Card } from 'antd';
 import { useCallback } from 'react';
-import {  productChoiceTypeDic } from '@/services/wood/dict';
+import { productChoiceTypeDic } from '@/services/wood/dict';
 import find from 'lodash/find';
 import DetailDrawer from '../Component/DetailDrawer';
 import OperateProduct from '../Component/UpdateForm';
@@ -22,9 +22,7 @@ const TableListYZ: React.FC = () => {
       dataIndex: 'code',
       valueType: 'text',
       render: (_, entity: API.ProductNewType) => {
-        return (
-          <DetailDrawer idFrom={entity?._id} name={entity?.code} type={choiceYzType}/>
-          )
+        return <DetailDrawer idFrom={entity?._id} name={entity?.code} type={choiceYzType} />;
       },
     },
     {
@@ -48,7 +46,12 @@ const TableListYZ: React.FC = () => {
       valueType: 'option',
       render: (_, record) => [
         <PermissionCN permissionKey="product:update" key="product:update">
-          <OperateProduct productType={choiceYzType} type="UPDATE" id={record?._id} refetchTableRef={actionRef} />
+          <OperateProduct
+            productType={choiceYzType}
+            type="UPDATE"
+            id={record?._id}
+            refetchTableRef={actionRef}
+          />
         </PermissionCN>,
         <PermissionCN permissionKey="product:delete" key="product:delete">
           <Popconfirm
@@ -115,11 +118,13 @@ const TableListYZ: React.FC = () => {
         params={{ choiceYzType }}
         toolBarRender={() => [
           <PermissionCN permissionKey="product:add" key="add">
-            <OperateProduct type="ADD" productType={choiceYzType}  refetchTableRef={actionRef} />
-          </PermissionCN>]}
+            <OperateProduct type="ADD" productType={choiceYzType} refetchTableRef={actionRef} />
+          </PermissionCN>,
+        ]}
         rowKey="_id"
         search={{
-          labelWidth: 120,
+          collapsed: false,
+          collapseRender: false,
         }}
         request={tableFetch}
         options={false}

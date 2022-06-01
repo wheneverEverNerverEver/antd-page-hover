@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import { message, Popconfirm, Button } from 'antd';
-import React, {  useRef } from 'react';
+import React, { useRef } from 'react';
 import { useIntl } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -9,7 +9,6 @@ import OperateProduct from '../Component/UpdateForm';
 import { findProductNewData, deleteProductNewData } from '@/services/wood/api';
 import { PermissionCN } from '@/components/PermissionCN';
 import DetailDrawer from '../Component/DetailDrawer';
-
 
 /**
  * @en-US Add node
@@ -25,23 +24,18 @@ import DetailDrawer from '../Component/DetailDrawer';
  */
 
 export function downloadFile(data: BlobPart, type: string, name?: string) {
-
-
   /* 火狐谷歌的文件下载方式 */
   const blob = new Blob([data], {
-    type
-  })
-  const downloadElement = document.createElement('a')
-  const href = window.URL.createObjectURL(blob)
-  downloadElement.href = href
-  downloadElement.download = `${name}`
-  document.body.appendChild(downloadElement)
-  downloadElement.click()
-  document.body.removeChild(downloadElement)
-
+    type,
+  });
+  const downloadElement = document.createElement('a');
+  const href = window.URL.createObjectURL(blob);
+  downloadElement.href = href;
+  downloadElement.download = `${name}`;
+  document.body.appendChild(downloadElement);
+  downloadElement.click();
+  document.body.removeChild(downloadElement);
 }
-
-
 
 /**
  *  Delete node
@@ -51,7 +45,6 @@ export function downloadFile(data: BlobPart, type: string, name?: string) {
  */
 
 const TableList: React.FC = () => {
-
   const actionRef = useRef<ActionType>();
 
   /**
@@ -60,16 +53,14 @@ const TableList: React.FC = () => {
    * */
   const intl = useIntl();
 
-
   const columns: ProColumns<API.ProductNewType>[] = [
     {
       title: '共同编码',
       dataIndex: 'code',
       tip: '共同编码',
       render: (_, entity: API.ProductNewType) => {
-        return (
-          <DetailDrawer idFrom={entity?._id} name={entity?.code} type="shixiang"/>
-          )}
+        return <DetailDrawer idFrom={entity?._id} name={entity?.code} type="shixiang" />;
+      },
     },
     {
       title: '食享名称',
@@ -87,7 +78,12 @@ const TableList: React.FC = () => {
       valueType: 'option',
       render: (_, record) => [
         <PermissionCN permissionKey="product:update" key="product:update">
-          <OperateProduct productType='shixiang' type="UPDATE" id={record?._id} refetchTableRef={actionRef} />
+          <OperateProduct
+            productType="shixiang"
+            type="UPDATE"
+            id={record?._id}
+            refetchTableRef={actionRef}
+          />
         </PermissionCN>,
         <PermissionCN permissionKey="product:delete" key="product:delete">
           <Popconfirm
@@ -103,7 +99,7 @@ const TableList: React.FC = () => {
                 }
               }
             }}
-            onCancel={() => { }}
+            onCancel={() => {}}
             okText="确定"
             cancelText="否"
           >
@@ -126,7 +122,8 @@ const TableList: React.FC = () => {
         actionRef={actionRef}
         rowKey="_id"
         search={{
-          labelWidth: 120,
+          collapsed: false,
+          collapseRender: false,
         }}
         request={async (params) => {
           // 表单搜索项会从 params 传入，传递给后端接口。
@@ -135,17 +132,17 @@ const TableList: React.FC = () => {
             limit: pageSize,
             page: current,
             ...rest,
-            productChoiceType:'shixiang'
+            productChoiceType: 'shixiang',
           });
         }}
         options={false}
         toolBarRender={() => [
           <PermissionCN permissionKey="product:add" key="add">
-            <OperateProduct type="ADD" productType='shixiang'  refetchTableRef={actionRef} />
-          </PermissionCN>]}
+            <OperateProduct type="ADD" productType="shixiang" refetchTableRef={actionRef} />
+          </PermissionCN>,
+        ]}
         columns={columns}
       />
-
     </PageContainer>
   );
 };

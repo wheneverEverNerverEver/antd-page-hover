@@ -4,29 +4,37 @@ import type { ProFormInstance } from '@ant-design/pro-form';
 import { ProFormRadio } from '@ant-design/pro-form';
 import { ModalForm, ProFormUploadDragger } from '@ant-design/pro-form';
 import { UploadOutlined } from '@ant-design/icons';
-import { importCustomerData } from '@/services/wood/api';
+import { importCustomerData, importCustomerIndeedData } from '@/services/wood/api';
 
 type FileForm = {
   file: any[];
-  labelType: API.LabelType
+  labelType: API.LabelType;
+};
+type ImportTYpe = 'ALL' | 'ONLY_NEED';
+const importTypeName: Record<ImportTYpe, string> = {
+  ALL: '覆盖式',
+  ONLY_NEED: '',
 };
 
 const ImportData: React.FC<{
-  refetch?: () => void, classoption: Record<"label" | "value", string>[]
+  refetch?: () => void;
+  classoption: Record<'label' | 'value', string>[];
+  type: 'ALL' | 'ONLY_NEED';
 }> = (props) => {
-  const { refetch, classoption } = props;
+  const { refetch, classoption, type } = props;
   const formRef = useRef<ProFormInstance<FileForm>>();
   return (
     <ModalForm<FileForm>
       modalProps={{
         destroyOnClose: true,
-        maskClosable: false
+        maskClosable: false,
       }}
       formRef={formRef}
-      title="导入客户"
+      title={`${importTypeName[type]}导入客户`}
       trigger={
-        <Button type="primary">
-          <UploadOutlined /> 导入
+        <Button type={type === 'ONLY_NEED' ? 'primary' : 'ghost'}>
+          <UploadOutlined />
+          {importTypeName[type]} 导入
         </Button>
       }
       onVisibleChange={(ifShow) => {
@@ -40,7 +48,10 @@ const ImportData: React.FC<{
           message.error('请选择文件');
           return false;
         }
-        const up = await importCustomerData({ file }, values.labelType);
+        const up =
+          type === 'ALL'
+            ? await importCustomerIndeedData({ file }, values.labelType)
+            : await importCustomerData({ file }, values.labelType);
         refetch?.();
         message.success(up ? '提交成功' : '提交失败');
         return true;
@@ -50,7 +61,7 @@ const ImportData: React.FC<{
         name="labelType"
         label="导入的客户类别："
         options={classoption}
-        radioType='button'
+        radioType="button"
         initialValue={classoption?.[0]?.value}
         rules={[
           {
@@ -67,7 +78,6 @@ const ImportData: React.FC<{
         accept=".xls,.xlsx"
         description=""
       />
-
     </ModalForm>
   );
 };

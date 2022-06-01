@@ -1,4 +1,5 @@
 import type { PermissionKey } from '../../components/PermissionCN';
+
 export const tagLabel: API.TagLable = {
   CLASS: {
     color: 'purple',
@@ -107,7 +108,7 @@ export const aftermarketRea: API.ColorAndLabel<API.AftermarketReason> = {
 };
 
 export const productChoiceTypeObjDic: Record<API.ProductChoiceType, string> = {
-  shixiang: '食享',
+  // shixiang: '食享',
   youzan: '有赞总部',
   'youzan.restaurant': '南佐餐饮',
   'youzan.retail': '南佐配送',
@@ -117,38 +118,38 @@ export const productChoiceTypeObjDic: Record<API.ProductChoiceType, string> = {
 export const productImportTypeDic: {
   value: API.ProductChoiceType;
   name: string;
-  permissionKey: PermissionKey
+  permissionKey: PermissionKey;
 }[] = [
   {
     value: 'baseGj',
-    name: productChoiceTypeObjDic.baseGj + '商品价格',
-    permissionKey:'product:import:gjPricePrice',
+    name: `${productChoiceTypeObjDic.baseGj}商品价格`,
+    permissionKey: 'product:import:gjPricePrice',
   },
   {
     value: 'youzan',
-    permissionKey:'product:import:yzProduct',
-    name: productChoiceTypeObjDic.youzan + '总部商品',
+    permissionKey: 'product:import:yzProduct',
+    name: `${productChoiceTypeObjDic.youzan}总部商品`,
   },
-  {
-    value: 'shixiang',
-    permissionKey:'product:import:sxProduct',
-    name: productChoiceTypeObjDic.shixiang + '商品',
-  },
+  // {
+  //   value: 'shixiang',
+  //   permissionKey:'product:import:sxProduct',
+  //   name: `${productChoiceTypeObjDic.shixiang  }商品`,
+  // },
   {
     value: 'youzan.retail',
-    permissionKey:'product:import:yzPrice',
-    name: productChoiceTypeObjDic['youzan.retail'] + '网店价格',
+    permissionKey: 'product:import:yzPrice',
+    name: `${productChoiceTypeObjDic['youzan.retail']}网店价格`,
   },
   {
     value: 'youzan.restaurant',
-    permissionKey:'product:import:yzPrice',
+    permissionKey: 'product:import:yzPrice',
 
-    name: productChoiceTypeObjDic['youzan.restaurant'] + '网店价格',
+    name: `${productChoiceTypeObjDic['youzan.restaurant']}网店价格`,
   },
   {
     value: 'youzan.wholesale',
-    permissionKey:'product:import:yzPrice',
-    name: productChoiceTypeObjDic['youzan.wholesale'] + '网店价格',
+    permissionKey: 'product:import:yzPrice',
+    name: `${productChoiceTypeObjDic['youzan.wholesale']}网店价格`,
   },
 ];
 export const productChoiceTypeDic: {
@@ -176,28 +177,28 @@ export const productChoiceTypeDic: {
  * */
 export const shopInPrice: Record<string, Record<string, keyof API.ProductDetailType>> = {
   386116040: {
-    /* name: '南佐配送（鹏和店）',*/
+    /* name: '南佐配送（鹏和店）', */
     price: 'yzretailPrice',
     gjPrice: 'gjretailPrice',
   },
   328208804: {
-    /**  name: '南佐潮缘1楼A96号（农都店）' **/
+    /**  name: '南佐潮缘1楼A96号（农都店）' * */
     price: 'yzwholesPrice',
     gjPrice: 'gjwholesPrice',
   },
   643005518: {
-    /**  name: '南佐餐饮（鹏和店）',*/
+    /**  name: '南佐餐饮（鹏和店）', */
     price: 'yzrestPrice',
     gjPrice: 'gjrestPrice',
   },
 };
-//名称的对应
+// 名称的对应
 export const mingziduiying: Record<
   string,
   Record<API.ProductChoiceType, keyof API.ProductNewType | keyof API.ProductDetailType | '_'>
 > = {
   规格: {
-    shixiang: 'sxspecifications',
+    // shixiang: 'sxspecifications',
     'youzan.restaurant': 'yzspecifications',
     'youzan.retail': 'yzspecifications',
     'youzan.wholesale': 'yzspecifications',
@@ -206,7 +207,7 @@ export const mingziduiying: Record<
   },
   单位: {
     baseGj: '_',
-    shixiang: 'sxunit',
+    // shixiang: 'sxunit',
     'youzan.restaurant': 'yzunit',
     'youzan.retail': 'yzunit',
     'youzan.wholesale': 'yzunit',
@@ -214,14 +215,14 @@ export const mingziduiying: Record<
   },
   价格: {
     baseGj: '_',
-    shixiang: '_',
+    // shixiang: '_',
     'youzan.restaurant': 'yzrestPrice',
     'youzan.retail': 'yzretailPrice',
     'youzan.wholesale': 'yzwholesPrice',
     youzan: '_',
   },
   管家价格: {
-    shixiang: '_',
+    // shixiang: '_',
     baseGj: '_',
     'youzan.restaurant': 'gjrestPrice',
     'youzan.retail': 'gjretailPrice',
@@ -230,7 +231,7 @@ export const mingziduiying: Record<
   },
   名称: {
     baseGj: '_',
-    shixiang: 'sxName',
+    // shixiang: 'sxName',
     'youzan.restaurant': 'yzName',
     'youzan.retail': 'yzName',
     'youzan.wholesale': 'yzName',
