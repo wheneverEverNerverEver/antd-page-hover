@@ -1,6 +1,5 @@
 import { DownloadComponent } from '@/components/DownloadUrl';
 import { transformProductYZData } from '@/services/wood/api';
-import { shopInPrice } from '@/services/wood/dict';
 import type { ProFormInstance } from '@ant-design/pro-form';
 import ProForm, { ProFormUploadDragger } from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -25,7 +24,7 @@ type FormTypeHere = {
 export const YouZanDepart = (): React.ReactNode => {
   const formRef = useRef<ProFormInstance<FormTypeHere>>();
   const [submitResult, recordSubmitResult] = useState<API.TransformBack | undefined>();
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false);
   return (
     <PageContainer>
       <Card>
@@ -61,14 +60,22 @@ export const YouZanDepart = (): React.ReactNode => {
                 },
               }}
               onFinish={async (values) => {
-                const { fileGoods, fileOrders, warehouse, department, belong, otherDepartment, otherRouter } = values;
+                const {
+                  fileGoods,
+                  fileOrders,
+                  warehouse,
+                  department,
+                  belong,
+                  otherDepartment,
+                  otherRouter,
+                } = values;
                 const fileOr = fileOrders?.[0].originFileObj;
                 const fileGo = fileGoods?.[0].originFileObj;
-                if (!fileGoods || !fileOrders || !warehouse || !belong) {
+                if (!fileGoods || !fileOrders || !warehouse) {
                   message.error('请填写必填项');
                   return false;
                 }
-                setLoading(true)
+                setLoading(true);
                 const result = await transformProductYZData(
                   {
                     fileGoods: fileGo,
@@ -79,10 +86,10 @@ export const YouZanDepart = (): React.ReactNode => {
                     warehouse,
                     belong,
                     otherDepartment,
-                    otherRouter
+                    otherRouter,
                   },
                 );
-                setLoading(false)
+                setLoading(false);
 
                 if (result) {
                   recordSubmitResult({
@@ -101,7 +108,7 @@ export const YouZanDepart = (): React.ReactNode => {
               }}
             >
               <Row gutter={16} style={style100}>
-                <Col className="gutter-row" span={24}>
+                {/* <Col className="gutter-row" span={24}>
                   <DepartmentSelect
                     name="belong"
                     type="BELONG"
@@ -109,7 +116,7 @@ export const YouZanDepart = (): React.ReactNode => {
                     label="所属店铺"
                     rules={[{ required: true, message: '请选择订单的所属店铺' }]}
                   />
-                </Col>
+                </Col> */}
                 <Col className="gutter-row" span={12}>
                   <DepartmentSelect
                     name="department"
@@ -234,26 +241,6 @@ export const YouZanDepart = (): React.ReactNode => {
             { dataIndex: 'code', title: '商品编码（管家婆）' },
             { dataIndex: 'yzName', title: '商品名称' },
             { dataIndex: 'gjname', title: '管家婆商品名称' },
-            {
-              dataIndex: '_id',
-              title: '店铺价格',
-              render: (_, record) => {
-                const paramName = shopInPrice[formRef.current?.getFieldValue?.('belong')]?.price
-                return record?.productDetail?.map(v => {
-                  return `${v[paramName] || '0'}/${v.yzunit || '0'}`
-                }).join(',');
-              },
-            },
-            {
-              dataIndex: 'barCode',
-              title: '管家婆对应价格',
-              render: (_, record) => {
-                const paramName = shopInPrice[formRef.current?.getFieldValue?.('belong')]?.gjPrice
-                return record?.productDetail?.map(v => {
-                  return `${v[paramName] || '0'}/${v.gjunit || '0'}`
-                }).join(',');
-              },
-            },
           ]}
         />
       </Card>
