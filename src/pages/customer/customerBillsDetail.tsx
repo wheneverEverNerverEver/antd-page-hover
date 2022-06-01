@@ -82,10 +82,11 @@ export default (): React.ReactNode => {
 
     const dataShow = useMemo(() => {
         const customerThis = dataCome?.[0]?.customer
+        const dataComeLen = dataCome?.length ?? 0
         return {
             activeKey: gotNumerIdexArray(dataCome?.length || 0),
             name: customerThis?.name,
-            total: customerThis?.oweTotal
+            total: dataCome?.[dataComeLen - 1]?.amountBefore
         }
     }, [dataCome])
 

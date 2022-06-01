@@ -23,13 +23,14 @@ export async function getInitialState(): Promise<{
   const fetchUserInfo = async () => {
     try {
       const msg = await queryCurrentUser();
-      if (!msg || msg?.accountName) {
-        await logoutAccount({})
+      if (!msg) {
         history.push(loginPath);
+        await logoutAccount({})
         return undefined;
       }
       return msg;
     } catch (error) {
+      await logoutAccount({})
       history.push(loginPath);
     }
     return undefined;
