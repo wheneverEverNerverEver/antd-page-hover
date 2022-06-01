@@ -3,7 +3,7 @@ import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { LoadingOutlined } from '@ant-design/icons';
-import { currentUser as queryCurrentUser } from './services/wood/api';
+import { currentUser as queryCurrentUser, logoutAccount } from './services/wood/api';
 
 const loginPath = '/user/login';
 
@@ -23,7 +23,8 @@ export async function getInitialState(): Promise<{
   const fetchUserInfo = async () => {
     try {
       const msg = await queryCurrentUser();
-      if (!msg) {
+      if (!msg || msg?.accountName) {
+        await logoutAccount({})
         history.push(loginPath);
         return undefined;
       }
