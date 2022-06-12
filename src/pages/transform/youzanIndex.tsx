@@ -17,8 +17,10 @@ type FormTypeHere = {
   fileGoods?: any;
   warehouse?: string;
   fileOrders?: any;
-  otherRouter?: string[];
-  otherDepartment?: string;
+  other?: {
+    router?: string;
+    department?: string;
+  }[];
 };
 
 export const YouZanDepart = (): React.ReactNode => {
@@ -60,15 +62,7 @@ export const YouZanDepart = (): React.ReactNode => {
                 },
               }}
               onFinish={async (values) => {
-                const {
-                  fileGoods,
-                  fileOrders,
-                  warehouse,
-                  department,
-                  belong,
-                  otherDepartment,
-                  otherRouter,
-                } = values;
+                const { fileGoods, fileOrders, warehouse, department, belong, other } = values;
                 const fileOr = fileOrders?.[0].originFileObj;
                 const fileGo = fileGoods?.[0].originFileObj;
                 if (!fileGoods || !fileOrders || !warehouse) {
@@ -85,8 +79,7 @@ export const YouZanDepart = (): React.ReactNode => {
                     department,
                     warehouse,
                     belong,
-                    otherDepartment,
-                    otherRouter,
+                    other,
                   },
                 );
                 setLoading(false);
@@ -108,15 +101,6 @@ export const YouZanDepart = (): React.ReactNode => {
               }}
             >
               <Row gutter={16} style={style100}>
-                {/* <Col className="gutter-row" span={24}>
-                  <DepartmentSelect
-                    name="belong"
-                    type="BELONG"
-                    style={style100}
-                    label="所属店铺"
-                    rules={[{ required: true, message: '请选择订单的所属店铺' }]}
-                  />
-                </Col> */}
                 <Col className="gutter-row" span={12}>
                   <DepartmentSelect
                     name="department"

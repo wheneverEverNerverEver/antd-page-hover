@@ -31,17 +31,18 @@ export async function transformProductData(
 export async function transformProductYZData(
   body: { fileGoods: any; fileOrders: any },
   baseInfo: API.ProductYzTransform & {
-    otherRouter?: string[];
-    otherDepartment?: string;
+    other?: {
+      department?: string;
+      router?: string;
+    }[];
   },
   options?: Record<string, any>,
 ) {
-  const { otherDepartment, otherRouter, ...rest } = baseInfo;
+  const { other, ...rest } = baseInfo;
   const formData = new FormData();
   formData.append('fileOrders', body.fileOrders);
   formData.append('fileGoods', body.fileGoods);
-  formData.append('otherRouter', JSON.stringify(otherRouter || ''));
-  formData.append('otherDepartment', otherDepartment || '');
+  formData.append('other', JSON.stringify(other || ''));
   return request<API.TransformBack | API.ErrorDe>('/api/product/transformExcelyz', {
     method: 'POST',
     data: formData,
