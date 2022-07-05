@@ -48,6 +48,7 @@ const OtherDepartment: React.FC = () => {
             initialValue={[
               { router: 'YWN32', department: 'gzlk22' },
               { router: 'YWN33', department: 'gzlk29' },
+              { router: 'YWN34', department: '30' },
             ]}
           >
             <ProForm.Group key="base" direction="horizontal" size={[23, 23]} align="center">
