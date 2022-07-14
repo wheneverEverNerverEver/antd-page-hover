@@ -59,6 +59,9 @@ const ImageUpload: React.FC<{
                 placeholder="——"
                 name="img"
                 accept="image/png,image/jpg,image/jpeg"
+                fieldProps={{
+                  beforeUpload: () => false
+                }}
             />
 
         </ModalForm>

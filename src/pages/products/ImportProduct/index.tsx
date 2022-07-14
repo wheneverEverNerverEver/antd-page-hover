@@ -129,6 +129,9 @@ const ImportProduct: React.FC<{}> = () => {
                     name={`${item.value}file`}
                     accept=".xls,.xlsx"
                     description=""
+                    fieldProps={{
+                      beforeUpload: () => false
+                    }}
                   />
                 </ProForm>
               </PermissionCN>

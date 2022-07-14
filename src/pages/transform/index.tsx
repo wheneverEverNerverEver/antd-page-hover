@@ -83,6 +83,9 @@ export default (): React.ReactNode => {
                     onChange={() => {
                       recordSubmitResult((v) => ({ ...(v || {}), fileName: undefined }));
                     }}
+                    fieldProps={{
+                      beforeUpload: () => false
+                    }}
                   />
                 </Col>
               </Row>

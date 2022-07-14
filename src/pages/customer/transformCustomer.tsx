@@ -83,6 +83,9 @@ const CustomerTransform: React.FC = () => {
                                 onChange={() => {
 
                                 }}
+                                fieldProps={{
+                                  beforeUpload: () => false
+                                }}
                             />
                         </ProForm>
                     </Card>

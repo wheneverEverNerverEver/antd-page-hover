@@ -120,6 +120,9 @@ export const YouZanDepart = (): React.ReactNode => {
                       recordSubmitResult((v) => ({ ...(v || {}), fileName: undefined }));
                       return false;
                     }}
+                    fieldProps={{
+                      beforeUpload: () => false
+                    }}
                   />
                 </Col>
                 <Col className="gutter-row" span={12}>
@@ -142,6 +145,9 @@ export const YouZanDepart = (): React.ReactNode => {
                     onChange={() => {
                       recordSubmitResult((v) => ({ ...(v || {}), fileName: undefined }));
                       return false;
+                    }}
+                    fieldProps={{
+                      beforeUpload: () => false
                     }}
                   />
                 </Col>

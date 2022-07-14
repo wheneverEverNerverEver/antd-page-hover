@@ -55,6 +55,9 @@ const ImportImg: React.FC<{
         name="img"
         accept="image/png,image/jpg,image/jpeg"
         description=""
+        fieldProps={{
+          beforeUpload: () => false
+        }}
       />
 
     </ModalForm>

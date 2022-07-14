@@ -49,6 +49,9 @@ const ImportData: React.FC<{}> = () => {
         accept=".xls,.xlsx"
         description=""
         tooltip="文件导入的格式即下载出全部商品文件的格式"
+        fieldProps={{
+          beforeUpload: () => false
+        }}
       />
     </ModalForm>
   );

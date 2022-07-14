@@ -77,6 +77,9 @@ const ImportData: React.FC<{
         name="file"
         accept=".xls,.xlsx"
         description=""
+        fieldProps={{
+          beforeUpload: () => false
+        }}
       />
     </ModalForm>
   );
